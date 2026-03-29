@@ -56,6 +56,8 @@ project "Nova"
         "ImGui"
     }
 	
+	linkoptions { "/ignore:4006" }
+	
 	files
 	{
         "%{prj.location}/resources/**",
@@ -91,6 +93,8 @@ project "Nova"
         optimize "on"
 		libdirs { "libs/libs-Release" }
         links { "DirectXTex_Release.lib" }
+		
+	filter {}
 		
 	-- Shader options
     shaderobjectfileoutput("../Game/Assets/CompiledShaders/%%(Filename).cso")
