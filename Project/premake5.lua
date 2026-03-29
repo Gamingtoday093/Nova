@@ -17,7 +17,6 @@ workspace "Nova"
 	
 group "nova-dependencies" 
     include "vendor/external/ImGui"
-    include "vendor/external/ImGuizmo"
 group "game-dependencies"
 	include "vendor/external/RVO2"
 group ""
@@ -54,8 +53,7 @@ project "Nova"
         "d3d11.lib",
         "D3DCompiler.lib",
         "assimp-vc143-mt.lib",
-        "ImGui",
-        "ImGuizmo"
+        "ImGui"
     }
 	
 	files
@@ -76,7 +74,8 @@ project "Nova"
 	{
         "%{prj.location}/src",
         "%{prj.location}/vendor",
-        "vendor"
+        "%{wks.location}/vendor",
+        "%{wks.location}/vendor/external/ImGui" -- ImGuizmo needs this
     }
 	
 	filter "configurations:Debug"
@@ -94,7 +93,7 @@ project "Nova"
         links { "DirectXTex_Release.lib" }
 		
 	-- Shader options
-    shaderobjectfileoutput("../Project/Assets/CompiledShaders/%%(Filename).cso")
+    shaderobjectfileoutput("../Game/Assets/CompiledShaders/%%(Filename).cso")
 
     filter("files:**_vs.hlsl")
     shadertype("Vertex")
@@ -106,7 +105,6 @@ project "Nova"
 	
 project "Game"
 	location "Game"
-	kind "ConsoleApp"
 	language "C++"
     cppdialect "C++20"
 	
@@ -138,15 +136,20 @@ project "Game"
 	{
         "%{prj.location}/src",
 		"%{wks.location}/Nova/src",
-		"%{wks.location}/Nova/vendor"
+		"%{wks.location}/Nova/vendor",
+		"%{wks.location}/vendor/external/RVO2/src"
 	}
 	
 	filter "configurations:Debug"
         defines "DEBUG"
         runtime "Debug"
         symbols "on"
+		kind "ConsoleApp"
 
     filter "configurations:Release"
         defines "RELEASE"
         runtime "Release"
         optimize "on"
+		kind "WindowedApp"
+		linkoptions { "/ENTRY:mainCRTStartup" }
+		
