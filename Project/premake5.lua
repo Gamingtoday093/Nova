@@ -127,7 +127,7 @@ project "Game"
 	
 	files
 	{
-        "%{prj.location}/resources/**",
+		"%{prj.location}/resources/**",
         "%{prj.location}/src/**.cpp",
         "%{prj.location}/src/**.h",
         "%{prj.location}/src/**.hpp",
