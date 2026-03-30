@@ -10,6 +10,11 @@ workspace "Nova"
         "Release"
     }
 	
+	filter "system:windows" -- MSVC Compiler flag
+		buildoptions { "/utf-8" }
+	
+	filter {}
+	
 	startproject "Game"
 	
 	TargetDir = "bin/%{cfg.buildcfg}/%{prj.name}"
@@ -80,6 +85,11 @@ project "Nova"
         "%{wks.location}/vendor/external/ImGui" -- ImGuizmo needs this
     }
 	
+	filter "files:%{prj.location}/vendor/**"
+        warnings "Off"
+	
+	filter {}
+	
 	filter "configurations:Debug"
         defines "DEBUG"
         runtime "Debug"
@@ -143,6 +153,11 @@ project "Game"
 		"%{wks.location}/Nova/vendor",
 		"%{wks.location}/vendor/external/RVO2/src"
 	}
+	
+	filter "files:%{prj.location}/vendor/**"
+        warnings "Off"
+	
+	filter {}
 	
 	filter "configurations:Debug"
         defines "DEBUG"
