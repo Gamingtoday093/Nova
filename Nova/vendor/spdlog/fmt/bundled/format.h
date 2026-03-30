@@ -1,3 +1,5 @@
+#pragma warning(push, 0)
+#pragma warning(disable : 26498 26495 )
 /*
   Formatting library for C++
 
@@ -3504,6 +3506,7 @@ FMT_CONSTEXPR20 auto write(OutputIt out, T value) -> OutputIt {
   if (is_constant_evaluated()) return write<Char>(out, value, format_specs());
 
   auto s = detail::signbit(value) ? sign::minus : sign::none;
+#pragma warning disable 26498
   auto mask = exponent_mask<fast_float_t<T>>();
   if ((bit_cast<decltype(mask)>(value) & mask) == mask)
     return write_nonfinite<Char>(out, std::isnan(value), {}, s);
@@ -4393,3 +4396,5 @@ FMT_END_NAMESPACE
 #endif
 
 #endif  // FMT_FORMAT_H_
+
+#pragma warning(pop)

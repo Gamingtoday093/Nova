@@ -14,7 +14,7 @@ namespace Nova
 		virtual ~IApplication() = default;
 		virtual void Run() = 0;
 
-		const ApplicationStartupInfo& GetStartupInfo() { return m_StartupInfo; }
+		const ApplicationStartupInfo& GetAppStartupInfo() { return m_StartupInfo; }
 
 	protected:
 		ApplicationStartupInfo m_StartupInfo;

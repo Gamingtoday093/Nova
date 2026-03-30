@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Nova.rc
+// Used by Game.rc
 //
 #define IDI_ICON2                       102
 

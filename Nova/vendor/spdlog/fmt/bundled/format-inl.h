@@ -1,3 +1,5 @@
+#pragma warning(push, 0)
+#pragma warning(disable : 26498)
 // Formatting library for C++ - implementation
 //
 // Copyright (c) 2012 - 2016, Victor Zverovich
@@ -1946,3 +1948,5 @@ FMT_FUNC auto is_printable(uint32_t cp) -> bool {
 FMT_END_NAMESPACE
 
 #endif  // FMT_FORMAT_INL_H_
+
+#pragma warning(pop)

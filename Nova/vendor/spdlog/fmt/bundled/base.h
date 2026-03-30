@@ -1,3 +1,5 @@
+#pragma warning(push, 0)
+#pragma warning(disable : 6294)
 // Formatting library for C++ - the base API for char/UTF-8
 //
 // Copyright (c) 2012 - present, Victor Zverovich
@@ -3008,3 +3010,5 @@ FMT_END_NAMESPACE
 #  include "format.h"
 #endif
 #endif  // FMT_BASE_H_
+
+#pragma warning(pop)

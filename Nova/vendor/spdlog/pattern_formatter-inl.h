@@ -1,3 +1,5 @@
+#pragma warning(push, 0)
+#pragma warning(disable : 26800)
 // Copyright(c) 2015-present, Gabi Melman & spdlog contributors.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
@@ -1349,3 +1351,5 @@ SPDLOG_INLINE void pattern_formatter::compile_pattern_(const std::string &patter
     }
 }
 }  // namespace spdlog
+
+#pragma warning(pop)
