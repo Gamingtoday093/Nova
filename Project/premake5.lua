@@ -65,30 +65,25 @@ project "Nova"
 	
 	files
 	{
-        "%{prj.location}/resources/**",
-        "%{prj.location}/src/**.cpp",
-        "%{prj.location}/src/**.h",
-        "%{prj.location}/src/**.hpp",
-        "%{prj.location}/src/**.hlsl",
-
-        "%{prj.location}/vendor/**.cpp",
-        "%{prj.location}/vendor/**.h",
-        "%{prj.location}/vendor/**.hpp",
-        "%{prj.location}/vendor/**.inl"
+		"%{prj.location}/resources/**",
+		"%{prj.location}/src/**.cpp",
+		"%{prj.location}/src/**.h",
+		"%{prj.location}/src/**.hpp",
+		"%{prj.location}/src/**.hlsl",
+		
+		"%{prj.location}/vendor/**.cpp",
+		"%{prj.location}/vendor/**.h",
+		"%{prj.location}/vendor/**.hpp",
+		"%{prj.location}/vendor/**.inl"
     }
 	
 	includedirs
 	{
-        "%{prj.location}/src",
-        "%{prj.location}/vendor",
-        "%{wks.location}/vendor",
-        "%{wks.location}/vendor/external/ImGui" -- ImGuizmo needs this
+		"%{prj.location}/src",
+		"%{prj.location}/vendor",
+		"%{wks.location}/vendor",
+		"%{wks.location}/vendor/external/ImGui" -- ImGuizmo needs this
     }
-	
-	filter "files:%{prj.location}/vendor/**"
-        warnings "Off"
-	
-	filter {}
 	
 	filter "configurations:Debug"
         defines "DEBUG"
@@ -153,11 +148,6 @@ project "Game"
 		"%{wks.location}/Nova/vendor",
 		"%{wks.location}/vendor/external/RVO2/src"
 	}
-	
-	filter "files:%{prj.location}/vendor/**"
-        warnings "Off"
-	
-	filter {}
 	
 	filter "configurations:Debug"
         defines "DEBUG"

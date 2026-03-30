@@ -15,7 +15,7 @@
 #include "Nova/Logging/Log.h"
 
 // vendor
-#include "EnTT/entt.hpp"
+#include <EnTT/entt.hpp>
 
 inline std::wstring ToWString(const std::string& stringLhs, const std::string& stringRhs)
 {

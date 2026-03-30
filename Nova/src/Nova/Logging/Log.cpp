@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Log.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 std::unique_ptr<spdlog::logger> Nova::Log::s_CoreLogger;
 std::unique_ptr<spdlog::logger> Nova::Log::s_ClientLogger;
