@@ -16,6 +16,7 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 	m_Window->SetWindowEventCallback([this](WindowEvent& e) { OnWindowEvent(e); });
 
 	Graphics::GraphicsContextParameters contextParameters(m_Window->GetHWND());
+	m_IsMinimized = contextParameters.Width == 0 || contextParameters.Height == 0;
 	m_Framework = std::make_unique<Graphics::DX11>(contextParameters);
 	m_Renderer = std::make_unique<Graphics::Renderer>(*m_Framework);
 }
@@ -28,6 +29,7 @@ void Nova::WindowApplication::OnWindowEvent(WindowEvent& windowEvent)
 	{
 		case EWindowEvent::WindowResize:
 			WindowResizeEvent& resizeEvent = static_cast<WindowResizeEvent&>(windowEvent);
+			m_IsMinimized = resizeEvent.Width == 0 || resizeEvent.Height == 0;
 			m_Framework->Resize(resizeEvent.Width, resizeEvent.Height);
 			break;
 	}
@@ -51,11 +53,13 @@ void Nova::WindowApplication::Run()
 
 void Nova::WindowApplication::BeginFrame()
 {
-	static constexpr float clearColour[4] = { 0.16f, 0.16f, 0.16f, 0.16f };
-	m_Framework->BeginFrame(clearColour);
+	if (m_IsMinimized) return;
+	static constexpr float clearColor[4] = { 0.16f, 0.16f, 0.16f, 0.16f };
+	m_Framework->BeginFrame(clearColor);
 }
 
 void Nova::WindowApplication::EndFrame()
 {
+	if (m_IsMinimized) return;
 	m_Framework->EndFrame();
 }

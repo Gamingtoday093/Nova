@@ -21,6 +21,9 @@ void Nova::Graphics::Rasterizer::Create(ECullMode cullMode)
 		case ECullMode::None:
 			rasterizerDesc.CullMode = D3D11_CULL_NONE;
 			break;
+		default:
+			NOVA_ASSERT(false, "Unsupported CullMode");
+			break;
 	}
 
 	NOVA_HRASSERT(DX11::GetDevice()->CreateRasterizerState(&rasterizerDesc, &m_RasterizerState), "Create Rasterizer State");

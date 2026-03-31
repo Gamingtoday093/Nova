@@ -27,6 +27,9 @@ void Nova::Graphics::DepthStencilState::Create(EDepthMode depthMode)
 			depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 			depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
 			break;
+		default:
+			NOVA_ASSERT(false, "Unsupported DepthMode");
+			break;
 	}
 
 	NOVA_HRASSERT(DX11::GetDevice()->CreateDepthStencilState(&depthDesc, &m_DepthStencilState), "Create Depth Stencil State");

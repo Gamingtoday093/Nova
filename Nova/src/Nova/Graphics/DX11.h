@@ -32,7 +32,7 @@ namespace Nova::Graphics
 
 		void Resize(uint32_t width, uint32_t height);
 
-		void BeginFrame(const float clearColour[4]);
+		void BeginFrame(const float clearColor[4]);
 		void EndFrame();
 
 		static ID3D11Device1* GetDevice() { return Get().m_Device.Get(); }

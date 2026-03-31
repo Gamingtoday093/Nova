@@ -71,6 +71,9 @@ void Nova::Graphics::BlendState::Create(EBlendState blendState)
 			renderTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 			renderTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 			break;
+		default:
+			NOVA_ASSERT(false, "Unsupported BlendState");
+			break;
 	}
 
 	NOVA_HRASSERT(DX11::GetDevice()->CreateBlendState(&blendDesc, &m_BlendState), "Create Blend State");
