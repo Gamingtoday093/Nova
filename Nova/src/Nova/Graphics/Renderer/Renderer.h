@@ -3,6 +3,10 @@
 #include "Nova/Graphics/Bindables/Render/DepthStencilState.h"
 #include "Nova/Graphics/Bindables/Render/Rasterizer.h"
 #include "Nova/Graphics/Bindables/Render/BlendState.h"
+#include "Nova/Graphics/Bindables/Shader/StructBuffer.hpp"
+#include "Nova/Graphics/Bindables/Shader/ConstBuffer.hpp"
+#include <DirectXMath.h>
+#include "Nova/Graphics/RenderData/BufferStructs.h"
 
 namespace Nova::Graphics
 {
@@ -13,6 +17,9 @@ namespace Nova::Graphics
 
 	private:
 		DX11& m_Framework;
+
+		ConstBuffer<TransformBuffer> m_TransformBuffer;
+		StructBuffer<DirectX::XMMATRIX> m_AnimationBuffer;
 
 		DepthStencilState m_DepthStencilState;
 		Rasterizer m_Rasterizer;

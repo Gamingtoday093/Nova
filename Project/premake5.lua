@@ -102,7 +102,7 @@ project "Nova"
 	filter {}
 		
 	-- Shader options
-    shaderobjectfileoutput("../Game/Assets/CompiledShaders/%%(Filename).cso")
+    shaderobjectfileoutput("%{wks.location}/Game/Assets/CompiledShaders/%%(Filename).cso")
 
     filter("files:**_vs.hlsl")
     shadertype("Vertex")
@@ -135,6 +135,7 @@ project "Game"
 	files
 	{
 		"%{prj.location}/resources/**",
+		"%{prj.location}/Assets/**",
         "%{prj.location}/src/**.cpp",
         "%{prj.location}/src/**.h",
         "%{prj.location}/src/**.hpp",
