@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "WindowApplication.h"
 #include "Nova/Graphics/DX11.h"
+#include "Nova/Graphics/Renderer/Renderer.h"
 
 Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startupInfo) : IApplication(startupInfo)
 {
@@ -14,8 +15,12 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 	m_Window = std::make_unique<Window>(windowStartupInfo);
 	m_Window->SetWindowEventCallback([this](WindowEvent& e) { OnWindowEvent(e); });
 
-	m_Framework = std::make_unique<Graphics::DX11>(m_Window->GetHWND(), m_Window->GetWidth(), m_Window->GetHeight());
+	Graphics::GraphicsContextParameters contextParameters(m_Window->GetHWND());
+	m_Framework = std::make_unique<Graphics::DX11>(contextParameters);
+	m_Renderer = std::make_unique<Graphics::Renderer>(*m_Framework);
 }
+
+Nova::WindowApplication::~WindowApplication() = default;
 
 void Nova::WindowApplication::OnWindowEvent(WindowEvent& windowEvent)
 {

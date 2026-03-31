@@ -15,5 +15,5 @@ if (!condition)						\
 	NOVA_DEBUGBREAK();				\
 }
 #else // Release
-#define NOVA_ASSERT(condition, ...) assert(condition && __VA_ARGS__)
+#define NOVA_ASSERT(condition, ...)
 #endif

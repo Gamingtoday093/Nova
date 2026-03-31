@@ -3,7 +3,7 @@
 
 namespace Nova
 {
-	enum class EWindowEvent
+	enum class EWindowEvent : uint8_t
 	{
 		WindowResize
 	};

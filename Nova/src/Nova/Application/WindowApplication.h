@@ -5,6 +5,7 @@
 namespace Nova::Graphics
 {
 	class DX11;
+	class Renderer;
 }
 
 namespace Nova
@@ -13,6 +14,7 @@ namespace Nova
 	{
 	public:
 		WindowApplication(const ApplicationStartupInfo& startupInfo);
+		~WindowApplication();
 
 		void Run() override;
 
@@ -28,5 +30,6 @@ namespace Nova
 
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Graphics::DX11> m_Framework;
+		std::unique_ptr<Graphics::Renderer> m_Renderer;
 	};
 }
