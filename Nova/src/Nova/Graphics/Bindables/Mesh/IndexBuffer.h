@@ -15,6 +15,6 @@ namespace Nova::Graphics
 
 	private:
 		ComPtr<ID3D11Buffer> m_IndexBuffer;
-		uint32_t m_IndexBufferLength;
+		uint32_t m_IndexBufferLength = 0;
 	};
 }

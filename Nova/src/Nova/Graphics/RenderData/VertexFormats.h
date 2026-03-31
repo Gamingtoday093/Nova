@@ -7,6 +7,12 @@ namespace Nova::Graphics
 {
 	struct Vertex
 	{
+		Vertex(float x, float y, float z)
+		{
+			Position = { x, y, z };
+			Color = { 0, 1, 1 };
+		}
+
 		XMFLOAT3 Position;
 		XMFLOAT3 Color;
 	};

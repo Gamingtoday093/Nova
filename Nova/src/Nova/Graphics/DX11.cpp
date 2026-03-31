@@ -77,8 +77,6 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 	CreateRenderTargetViews();
 	CreateDepthStencilView();
 	UpdateViewport();
-
-	m_Context->OMSetRenderTargets(1, m_SceneView.GetAddressOf(), m_DepthStencilView.Get());
 }
 
 Nova::Graphics::DX11::~DX11()
@@ -105,12 +103,12 @@ void Nova::Graphics::DX11::Resize(uint32_t width, uint32_t height)
 	CreateRenderTargetViews();
 	CreateDepthStencilView();
 	UpdateViewport();
-
-	m_Context->OMSetRenderTargets(1, m_SceneView.GetAddressOf(), m_DepthStencilView.Get());
 }
 
 void Nova::Graphics::DX11::BeginFrame(const float clearColor[4])
 {
+	m_Context->OMSetRenderTargets(1, m_SceneView.GetAddressOf(), m_DepthStencilView.Get());
+
 	m_Context->ClearRenderTargetView(m_SceneView.Get(), clearColor);
 	m_Context->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

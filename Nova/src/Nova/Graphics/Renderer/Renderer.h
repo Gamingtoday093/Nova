@@ -7,6 +7,11 @@
 #include "Nova/Graphics/Bindables/Shader/ConstBuffer.hpp"
 #include <DirectXMath.h>
 #include "Nova/Graphics/RenderData/BufferStructs.h"
+#include "Nova/Graphics/Bindables/Mesh/VertexBuffer.h"
+#include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
+#include "Nova/Graphics/Bindables/Shader/VertexShader.h"
+#include "Nova/Graphics/Bindables/Shader/PixelShader.h"
+#include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
 
 namespace Nova::Graphics
 {
@@ -15,8 +20,16 @@ namespace Nova::Graphics
 	public:
 		Renderer(DX11& framework);
 
+		void RenderCube();
+
 	private:
 		DX11& m_Framework;
+
+		VertexBuffer m_VertexBuffer;
+		IndexBuffer m_IndexBuffer;
+		InputLayout m_InputLayout;
+		VertexShader m_VertexShader;
+		PixelShader m_PixelShader;
 
 		ConstBuffer<TransformBuffer> m_TransformBuffer;
 		StructBuffer<DirectX::XMMATRIX> m_AnimationBuffer;

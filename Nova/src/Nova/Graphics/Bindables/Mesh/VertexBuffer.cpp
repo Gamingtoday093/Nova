@@ -5,11 +5,11 @@
 
 void Nova::Graphics::VertexBuffer::Create(const std::vector<Nova::Graphics::Vertex>& vertices)
 {
-	m_VertexBufferLength = uint32_t(vertices.size());
+	m_VertexElementSize = sizeof(Vertex);
 
 	D3D11_BUFFER_DESC vertexBufferDesc
 	{
-		.ByteWidth = sizeof(Vertex) * m_VertexBufferLength,
+		.ByteWidth = m_VertexElementSize * uint32_t(vertices.size()),
 		.Usage = D3D11_USAGE_IMMUTABLE,
 		.BindFlags = D3D11_BIND_VERTEX_BUFFER
 	};
@@ -25,6 +25,6 @@ void Nova::Graphics::VertexBuffer::Create(const std::vector<Nova::Graphics::Vert
 void Nova::Graphics::VertexBuffer::Bind() const
 {
 	NOVA_ASSERT(m_VertexBuffer.Get(), "Vertex Buffer not Created");
-	static constexpr uint32_t offsets = 0;
-	DX11::GetContext()->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), &m_VertexBufferLength, &offsets);
+	static constexpr uint32_t offsets = 0u;
+	DX11::GetContext()->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), &m_VertexElementSize, &offsets);
 }

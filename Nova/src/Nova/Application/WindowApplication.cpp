@@ -43,6 +43,7 @@ void Nova::WindowApplication::Run()
 		BeginFrame();
 		// ----------
 
+		m_Renderer->RenderCube();
 		OnUpdate();
 		
 		// ----------

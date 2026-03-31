@@ -15,6 +15,6 @@ namespace Nova::Graphics
 
 	private:
 		ComPtr<ID3D11Buffer> m_VertexBuffer;
-		uint32_t m_VertexBufferLength;
+		uint32_t m_VertexElementSize = 0;
 	};
 }

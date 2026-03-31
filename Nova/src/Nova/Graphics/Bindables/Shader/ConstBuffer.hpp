@@ -21,7 +21,7 @@ namespace Nova::Graphics
 
 		EBindType GetBindType() const;
 
-		T Data;
+		T Data{};
 
 	private:
 		ComPtr<ID3D11Buffer> m_Buffer;
@@ -56,7 +56,7 @@ namespace Nova::Graphics
 
 		NOVA_HRASSERT(DX11::GetContext()->Map(m_Buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Map ConstBuffer Buffer");
 
-		memcpy_s(bufferData.pData, sizeof(T), std::data(Data), sizeof(T));
+		memcpy_s(bufferData.pData, sizeof(T), &Data, sizeof(T));
 
 		DX11::GetContext()->Unmap(m_Buffer.Get(), 0);
 	}

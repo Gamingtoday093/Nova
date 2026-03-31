@@ -1,3 +1,5 @@
+#pragma warning(push, 0)
+#pragma warning (disable : 26495)
 // Formatting library for C++ - chrono support
 //
 // Copyright (c) 2012 - present, Victor Zverovich
@@ -2244,3 +2246,4 @@ FMT_END_EXPORT
 FMT_END_NAMESPACE
 
 #endif  // FMT_CHRONO_H_
+#pragma warning(pop)
