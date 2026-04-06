@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
+#include "Nova/Input/Input.h"
 
 Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_TransformBuffer(EBindType::VertexShader), m_AnimationBuffer(EBindType::VertexShader, 256)
@@ -50,19 +51,19 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 
 	m_VertexBuffer.Bind();
 	m_IndexBuffer.Bind();
+}
 
+void Nova::Graphics::Renderer::RenderCube(Camera& camera)
+{
 	m_TransformBuffer.Data.ProjectionViewMatrix =
-		DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0, 1.5f, -3, 0), DirectX::XMVectorSet(0, 0, 1, 0), DirectX::XMVectorSet(0, 1, 0, 0)) *
-		DirectX::XMMatrixPerspectiveFovLH(1.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
+		camera.CalculateViewMatrix() *
+		DirectX::XMMatrixPerspectiveFovLH(camera.FovAngle, m_Framework.GetAspectRatio(), camera.NearClipPlane, camera.FarClipPlane);
 
 	m_TransformBuffer.Data.ModelMatrix =
 		DirectX::XMMatrixIdentity();
 
 	m_TransformBuffer.ApplyBuffer();
 	m_TransformBuffer.Bind();
-}
 
-void Nova::Graphics::Renderer::RenderCube()
-{
 	DX11::GetContext()->DrawIndexed(m_IndexBuffer.Length(), 0, 0);
 }

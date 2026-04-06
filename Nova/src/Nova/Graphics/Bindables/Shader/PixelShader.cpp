@@ -12,7 +12,7 @@ void Nova::Graphics::PixelShader::Create(const std::string& shaderName)
 	NOVA_HRASSERT(DX11::GetDevice()->CreatePixelShader(
 		pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(),
 		nullptr,
-		&m_PixelShader), "Create Vertex Shader");
+		&m_PixelShader), "Create Pixel Shader");
 }
 
 void Nova::Graphics::PixelShader::Bind() const

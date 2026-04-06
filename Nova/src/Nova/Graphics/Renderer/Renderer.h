@@ -12,6 +12,7 @@
 #include "Nova/Graphics/Bindables/Shader/VertexShader.h"
 #include "Nova/Graphics/Bindables/Shader/PixelShader.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
+#include "Nova/Scene/Camera/Camera.hpp"
 
 namespace Nova::Graphics
 {
@@ -20,7 +21,7 @@ namespace Nova::Graphics
 	public:
 		Renderer(DX11& framework);
 
-		void RenderCube();
+		void RenderCube(Camera& camera);
 
 	private:
 		DX11& m_Framework;

@@ -10,7 +10,7 @@ namespace Nova::Graphics
 		Vertex(float x, float y, float z)
 		{
 			Position = { x, y, z };
-			Color = { 0, 1, 1 };
+			Color = { 0, 1, 0.5f };
 		}
 
 		XMFLOAT3 Position;

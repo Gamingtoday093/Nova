@@ -116,7 +116,12 @@ void Nova::Graphics::DX11::BeginFrame(const float clearColor[4])
 void Nova::Graphics::DX11::EndFrame()
 {
 	// Maybe use Present1() for ImGui Editor stuff as thats basically static
-	m_SwapChain->Present(1, 0);
+	m_SwapChain->Present(0, 0);
+}
+
+float Nova::Graphics::DX11::GetAspectRatio() const
+{
+	return float(m_Width) / float(m_Height);
 }
 
 void Nova::Graphics::DX11::CreateRenderTargetViews()

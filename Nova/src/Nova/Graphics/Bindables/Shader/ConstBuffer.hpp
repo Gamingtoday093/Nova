@@ -1,6 +1,4 @@
 #pragma once
-
-#pragma once
 #include "Nova/Graphics/Bindables/IBindable.hpp"
 #include "BufferCommon.hpp"
 #include "Nova/Graphics/DX11.h"

@@ -30,10 +30,15 @@ namespace Nova::Graphics
 		DX11(const GraphicsContextParameters& contextParameters);
 		~DX11();
 
+		DX11(const DX11&) = delete;
+		DX11& operator=(const DX11&) = delete;
+
 		void Resize(uint32_t width, uint32_t height);
 
 		void BeginFrame(const float clearColor[4]);
 		void EndFrame();
+
+		float GetAspectRatio() const;
 
 		static ID3D11Device1* GetDevice() { return Get().m_Device.Get(); }
 		static ID3D11DeviceContext1* GetContext() { return Get().m_Context.Get(); }

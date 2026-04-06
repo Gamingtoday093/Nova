@@ -10,6 +10,12 @@ namespace Nova::Graphics
 
 namespace Nova
 {
+	class Input;
+	class Scene;
+}
+
+namespace Nova
+{
 	class WindowApplication : public IApplication
 	{
 	public:
@@ -25,12 +31,15 @@ namespace Nova
 	private:
 		void OnWindowEvent(WindowEvent& windowEvent);
 
+		void RenderFrame();
 		void BeginFrame();
 		void EndFrame();
 
 		bool m_IsMinimized;
+		std::unique_ptr<Input> m_Input;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Graphics::DX11> m_Framework;
 		std::unique_ptr<Graphics::Renderer> m_Renderer;
+		std::unique_ptr<Scene> m_Scene;
 	};
 }
