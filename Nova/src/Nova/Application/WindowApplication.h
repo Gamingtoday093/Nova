@@ -10,6 +10,7 @@ namespace Nova::Graphics
 
 namespace Nova
 {
+	class Time;
 	class Input;
 	class Scene;
 }
@@ -36,6 +37,7 @@ namespace Nova
 		void EndFrame();
 
 		bool m_IsMinimized;
+		std::unique_ptr<Time> m_Time;
 		std::unique_ptr<Input> m_Input;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Graphics::DX11> m_Framework;

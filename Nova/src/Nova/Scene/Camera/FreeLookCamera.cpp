@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FreeLookCamera.h"
 #include "Nova/Input/Input.h"
+#include "Nova/Time/Time.h"
 
 Nova::FreeLookCamera::FreeLookCamera(XMFLOAT3 position, XMFLOAT2 yawPitch, float speed, float rotationSpeed)
 {
@@ -13,6 +14,8 @@ Nova::FreeLookCamera::FreeLookCamera(XMFLOAT3 position, XMFLOAT2 yawPitch, float
 
 void Nova::FreeLookCamera::Update()
 {
+	if (!Input::KeyHeld(EMouseButton::RIGHT)) return;
+
 	m_CalculatedViewMatrix = false;
 
 	XMFLOAT3 setDelta{};
@@ -45,7 +48,7 @@ void Nova::FreeLookCamera::Update()
 	{
 		moveDelta = XMVector3TransformCoord(moveDelta, XMMatrixRotationRollPitchYaw(m_YawPitch.y, m_YawPitch.x, 0));
 
-		moveDelta *= m_Speed;
+		moveDelta *= m_Speed * Time::GetDeltaTime();
 		if (Input::KeyHeld(EKey::SHIFT))
 		{
 			moveDelta *= 2.f;
@@ -53,12 +56,9 @@ void Nova::FreeLookCamera::Update()
 	}
 	XMStoreFloat3(&m_Position, XMLoadFloat3(&m_Position) + moveDelta);
 
-	if (Input::KeyHeld(EMouseButton::RIGHT))
-	{
-		POINT mouseDelta = Input::GetMouseDelta();
-		m_YawPitch.x += mouseDelta.x * m_RotationSpeed;
-		m_YawPitch.y += mouseDelta.y * m_RotationSpeed;
-	}
+	POINT mouseDelta = Input::GetMouseDelta();
+	m_YawPitch.x += mouseDelta.x * m_RotationSpeed * Time::GetDeltaTime();
+	m_YawPitch.y += mouseDelta.y * m_RotationSpeed * Time::GetDeltaTime();
 }
 
 XMMATRIX Nova::FreeLookCamera::CalculateViewMatrix()

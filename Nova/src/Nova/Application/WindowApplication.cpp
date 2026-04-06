@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "WindowApplication.h"
 #include "Nova/Input/Input.h"
+#include "Nova/Time/Time.h"
 #include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Renderer/Renderer.h"
 #include "Nova/Scene/Scene.h"
@@ -8,6 +9,7 @@
 Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startupInfo) : IApplication(startupInfo)
 {
 	Log::Initialize(m_StartupInfo.Name);
+	m_Time = std::make_unique<Time>();
 	m_Input = std::make_unique<Input>();
 
 	WindowStartupInfo windowStartupInfo
@@ -71,6 +73,7 @@ void Nova::WindowApplication::RenderFrame()
 
 void Nova::WindowApplication::BeginFrame()
 {
+	m_Time->BeginFrame();
 	m_Input->BeginFrame();
 	if (m_IsMinimized) return;
 	static constexpr float clearColor[4] = { 0.16f, 0.16f, 0.16f, 0.16f };

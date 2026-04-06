@@ -1,6 +1,5 @@
 #include <Nova/EntryPoint.hpp>
 #include <Nova/Application/WindowApplication.h>
-#include <Nova/Graphics/DX11.h>
 
 class GameApp : public Nova::WindowApplication
 {
@@ -14,7 +13,7 @@ public:
 
 	void OnUpdate() override
 	{
-
+		
 	}
 
 	void OnShutdown() override
