@@ -10,67 +10,82 @@ Nova::FreeLookCamera::FreeLookCamera(XMFLOAT3 position, XMFLOAT2 yawPitch, float
 
 	m_Speed = speed;
 	m_RotationSpeed = rotationSpeed;
+
+	CalculateViewMatrix();
 }
 
 void Nova::FreeLookCamera::Update()
 {
-	if (!Input::KeyHeld(EMouseButton::RIGHT)) return;
-
-	m_CalculatedViewMatrix = false;
-
+	bool flying = Input::KeyHeld(EMouseButton::RIGHT);
+	if (!Input::KeyHeld(EMouseButton::MIDDLE) && !flying) return;
 	XMFLOAT3 setDelta{};
-	if (Input::KeyHeld(EKey::W))
+	if (flying)
 	{
-		setDelta.z += 1.f;
+		if (Input::KeyHeld(EKey::W))
+		{
+			setDelta.z += 1.f;
+		}
+		if (Input::KeyHeld(EKey::A))
+		{
+			setDelta.x += -1.f;
+		}
+		if (Input::KeyHeld(EKey::S))
+		{
+			setDelta.z += -1.f;
+		}
+		if (Input::KeyHeld(EKey::D))
+		{
+			setDelta.x += 1.f;
+		}
+		if (Input::KeyHeld(EKey::Q))
+		{
+			setDelta.y += 1.f;
+		}
+		if (Input::KeyHeld(EKey::E))
+		{
+			setDelta.y += -1.f;
+		}
 	}
-	if (Input::KeyHeld(EKey::A))
+	else
 	{
-		setDelta.x += -1.f;
+		POINT mouseDelta = Input::GetMouseDelta();
+		setDelta.x = -float(mouseDelta.x);
+		setDelta.y = float(mouseDelta.y);
 	}
-	if (Input::KeyHeld(EKey::S))
-	{
-		setDelta.z += -1.f;
-	}
-	if (Input::KeyHeld(EKey::D))
-	{
-		setDelta.x += 1.f;
-	}
-	if (Input::KeyHeld(EKey::Q))
-	{
-		setDelta.y += 1.f;
-	}
-	if (Input::KeyHeld(EKey::E))
-	{
-		setDelta.y += -1.f;
-	}
-	XMVECTOR moveDelta = XMVector3Normalize(XMLoadFloat3(&setDelta));
+	XMVECTOR moveDelta = XMLoadFloat3(&setDelta);
+	if (flying) moveDelta = XMVector3Normalize(moveDelta);
 	if (XMVector3LengthSq(moveDelta).m128_f32[0] > 0.5f)
 	{
 		moveDelta = XMVector3TransformCoord(moveDelta, XMMatrixRotationRollPitchYaw(m_YawPitch.y, m_YawPitch.x, 0));
 
 		moveDelta *= m_Speed * Time::GetDeltaTime();
-		if (Input::KeyHeld(EKey::SHIFT))
+		if (flying && Input::KeyHeld(EKey::SHIFT))
 		{
 			moveDelta *= 2.f;
 		}
 	}
 	XMStoreFloat3(&m_Position, XMLoadFloat3(&m_Position) + moveDelta);
 
-	POINT mouseDelta = Input::GetMouseDelta();
-	m_YawPitch.x += mouseDelta.x * m_RotationSpeed * Time::GetDeltaTime();
-	m_YawPitch.y += mouseDelta.y * m_RotationSpeed * Time::GetDeltaTime();
+	if (flying)
+	{
+		POINT mouseDelta = Input::GetMouseDelta();
+		m_YawPitch.x += mouseDelta.x * m_RotationSpeed * Time::GetDeltaTime();
+		m_YawPitch.y += mouseDelta.y * m_RotationSpeed * Time::GetDeltaTime();
+	}
+
+	CalculateViewMatrix();
 }
 
-XMMATRIX Nova::FreeLookCamera::CalculateViewMatrix()
+XMMATRIX Nova::FreeLookCamera::GetViewMatrix() const
 {
-	if (m_CalculatedViewMatrix) return m_ViewMatrix;
+	return m_ViewMatrix;
+}
 
+void Nova::FreeLookCamera::CalculateViewMatrix()
+{
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(m_YawPitch.y, m_YawPitch.x, 0);
 	m_ViewMatrix = XMMatrixLookToLH(
 		XMLoadFloat3(&m_Position),
 		XMVector3TransformCoord(XMVectorSet(0, 0, 1, 0), rotationMatrix),
 		XMVector3TransformCoord(XMVectorSet(0, 1, 0, 0), rotationMatrix));
-
-	m_CalculatedViewMatrix = true;
-	return m_ViewMatrix;
 }

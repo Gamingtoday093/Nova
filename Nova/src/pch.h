@@ -2,6 +2,7 @@
 
 // std
 #include <string>
+#include <filesystem>
 #include <chrono>
 #include <memory>
 #include <vector>
@@ -10,6 +11,7 @@
 // dx11
 #include <wrl.h>
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 // src
 #include "Nova/Logging/Log.h"

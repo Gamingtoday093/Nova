@@ -13,6 +13,7 @@
 #include "Nova/Graphics/Bindables/Shader/PixelShader.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
 #include "Nova/Scene/Camera/Camera.hpp"
+#include "Nova/Graphics/Resources/Mesh.h"
 
 namespace Nova::Graphics
 {
@@ -21,11 +22,13 @@ namespace Nova::Graphics
 	public:
 		Renderer(DX11& framework);
 
-		void RenderCube(Camera& camera);
+		void RenderCube(const Camera& camera);
+		void RenderShip(const Camera& camera);
 
 	private:
 		DX11& m_Framework;
 
+		std::shared_ptr<Mesh> m_ShipMesh;
 		VertexBuffer m_VertexBuffer;
 		IndexBuffer m_IndexBuffer;
 		InputLayout m_InputLayout;

@@ -8,6 +8,8 @@ namespace Nova::Graphics
 	class IndexBuffer : public IBindable
 	{
 	public:
+		IndexBuffer() = default;
+		IndexBuffer(const std::vector<uint16_t>& indices);
 		void Create(const std::vector<uint16_t>& indices);
 		void Bind() const override;
 

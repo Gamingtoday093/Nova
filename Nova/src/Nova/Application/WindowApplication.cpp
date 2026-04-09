@@ -5,6 +5,7 @@
 #include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Renderer/Renderer.h"
 #include "Nova/Scene/Scene.h"
+#include "Nova/Assets/AssetManager.h"
 
 Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startupInfo) : IApplication(startupInfo)
 {
@@ -19,6 +20,8 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 
 	m_Window = std::make_unique<Window>(windowStartupInfo);
 	m_Window->SetWindowEventCallback([this](WindowEvent& e) { OnWindowEvent(e); });
+
+	m_AssetManager = std::make_unique<AssetManager>();
 
 	Graphics::GraphicsContextParameters contextParameters(m_Window->GetHWND());
 	m_IsMinimized = contextParameters.Width == 0 || contextParameters.Height == 0;
@@ -68,7 +71,8 @@ void Nova::WindowApplication::Run()
 
 void Nova::WindowApplication::RenderFrame()
 {
-	m_Renderer->RenderCube(m_Scene->m_FreeLookCamera);
+	//m_Renderer->RenderCube(m_Scene->m_FreeLookCamera);
+	m_Renderer->RenderShip(m_Scene->m_FreeLookCamera);
 }
 
 void Nova::WindowApplication::BeginFrame()

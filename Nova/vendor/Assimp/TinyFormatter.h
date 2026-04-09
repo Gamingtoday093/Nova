@@ -1,3 +1,5 @@
+#pragma warning (push, 0)
+#pragma warning (disable : 26439)
 /*
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
@@ -179,3 +181,4 @@ typedef basic_formatter< wchar_t > wformat;
 } // ! namespace Assimp
 
 #endif
+#pragma warning (pop)

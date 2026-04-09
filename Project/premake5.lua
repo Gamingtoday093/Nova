@@ -120,6 +120,15 @@ project "Game"
 	targetdir(TargetDir)
     objdir(ObjectDir)
 	
+	NovaTargetDir = "bin/%{cfg.buildcfg}/Nova"
+	AssetsDir = "%{prj.location}/Assets"
+	
+	postbuildcommands 
+	{
+		"{COPYFILE} %[" .. NovaTargetDir ..  "/*.dll] %[" .. TargetDir .. "]",
+		"{COPYDIR} %[" .. AssetsDir .. "] %[" .. TargetDir .. "/Assets]"
+	}
+	
 	defines
 	{
         "UNICODE",

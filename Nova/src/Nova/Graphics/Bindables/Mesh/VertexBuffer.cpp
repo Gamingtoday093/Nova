@@ -3,6 +3,30 @@
 #include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Logging/HRAsserts.h"
 
+Nova::Graphics::VertexBuffer::VertexBuffer(const void* vertexData, uint32_t vertexDataSize, uint32_t vertexElementSize)
+{
+	m_VertexElementSize = vertexElementSize;
+
+	D3D11_BUFFER_DESC vertexBufferDesc
+	{
+		.ByteWidth = vertexDataSize,
+		.Usage = D3D11_USAGE_IMMUTABLE,
+		.BindFlags = D3D11_BIND_VERTEX_BUFFER
+	};
+
+	D3D11_SUBRESOURCE_DATA vertexInitialData
+	{
+		.pSysMem = vertexData
+	};
+
+	NOVA_HRASSERT(DX11::GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexInitialData, &m_VertexBuffer), "Create Vertex Buffer");
+}
+
+Nova::Graphics::VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices)
+{
+	Create(vertices);
+}
+
 void Nova::Graphics::VertexBuffer::Create(const std::vector<Nova::Graphics::Vertex>& vertices)
 {
 	m_VertexElementSize = sizeof(Vertex);

@@ -12,7 +12,7 @@ namespace Nova
 
 		void Update();
 		
-		XMMATRIX CalculateViewMatrix() override;
+		XMMATRIX GetViewMatrix() const override;
 		
 		float m_Speed;
 		float m_RotationSpeed;
@@ -21,7 +21,8 @@ namespace Nova
 		XMFLOAT2 m_YawPitch;
 
 	private:
-		bool m_CalculatedViewMatrix = false;
+		void CalculateViewMatrix();
+		
 		XMMATRIX m_ViewMatrix = {};
 	};
 }

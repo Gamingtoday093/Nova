@@ -10,7 +10,7 @@ namespace Nova
 	public:
 		virtual ~Camera() = default;
 
-		virtual XMMATRIX CalculateViewMatrix() = 0;
+		virtual XMMATRIX GetViewMatrix() const = 0;
 
 		float FovAngle = 1.f;
 		float NearClipPlane = 0.1f;

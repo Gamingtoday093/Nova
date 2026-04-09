@@ -3,6 +3,11 @@
 #include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Logging/HRAsserts.h"
 
+Nova::Graphics::IndexBuffer::IndexBuffer(const std::vector<uint16_t>& indices)
+{
+	Create(indices);
+}
+
 void Nova::Graphics::IndexBuffer::Create(const std::vector<uint16_t>& indices)
 {
 	m_IndexBufferLength = uint32_t(indices.size());

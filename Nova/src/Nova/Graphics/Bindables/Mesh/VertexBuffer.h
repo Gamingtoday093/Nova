@@ -9,6 +9,9 @@ namespace Nova::Graphics
 	class VertexBuffer : public IBindable
 	{
 	public:
+		VertexBuffer() = default;
+		VertexBuffer(const void* vertexData, uint32_t vertexDataSize, uint32_t vertexElementSize);
+		VertexBuffer(const std::vector<Vertex>& vertices);
 		void Create(const std::vector<Vertex>& vertices);
 
 		void Bind() const override;

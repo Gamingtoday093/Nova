@@ -12,6 +12,7 @@ namespace Nova
 {
 	class Time;
 	class Input;
+	class AssetManager;
 	class Scene;
 }
 
@@ -42,6 +43,7 @@ namespace Nova
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Graphics::DX11> m_Framework;
 		std::unique_ptr<Graphics::Renderer> m_Renderer;
+		std::unique_ptr<AssetManager> m_AssetManager;
 		std::unique_ptr<Scene> m_Scene;
 	};
 }
