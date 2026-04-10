@@ -18,9 +18,9 @@ const Nova::MeshImportSettings& Nova::MeshSourceAsset::GetSettings() const
 
 void Nova::MeshSourceAsset::SetSettings(const MeshImportSettings& settings)
 {
-	auto oldSettings = m_Settings;
+	bool needsReload = m_Settings != settings;
 	m_Settings = settings;
-	if (oldSettings != m_Settings) ReloadFromSource();
+	if (needsReload) ReloadFromSource();
 }
 
 void Nova::MeshSourceAsset::ReloadFromSource()

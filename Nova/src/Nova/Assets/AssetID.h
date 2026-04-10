@@ -2,17 +2,18 @@
 
 namespace Nova
 {
-	using AssetID = GUID;
-
-	namespace Assets
+	struct AssetID : public GUID
 	{
-		AssetID NewAssetID();
-		std::string GetStringAssetID(const AssetID& assetID);
-	}
+		static AssetID NewID();
+		std::string ToString() const;
+	};
+}
 
-	// https://stackoverflow.com/questions/24113864/what-is-the-right-way-to-use-a-guid-as-the-key-in-stdhash-map
-	struct AssetIDHasher
+namespace std
+{
+	template<>
+	struct hash<Nova::AssetID>
 	{
-		size_t operator()(const AssetID& assetId) const noexcept;
+		size_t operator()(const Nova::AssetID& assetId) const noexcept;
 	};
 }

@@ -27,9 +27,7 @@ namespace Nova
 		virtual ~Asset() = default;
 
 		const AssetID& GetAssetID() const;
-
 		const std::string& GetName() const;
-		void SetName(const std::string& name);
 
 		virtual const char* GetAssetName() const = 0;
 		inline static const char* GetAssetName_s() { return "BaseAsset"; }
@@ -47,7 +45,6 @@ namespace Nova
 
 	private:
 		AssetID m_AssetID;
-
 		std::string m_Name;
 
 		friend class AssetManager;

@@ -24,7 +24,9 @@ namespace Nova
 		static bool DestroyAsset(const AssetID& assetID);
 
 	private:
-		using AssetRegistry = std::unordered_map<AssetID, std::shared_ptr<Asset>, AssetIDHasher>;
+		using AssetRegistry = std::unordered_map<AssetID, std::shared_ptr<Asset>>;
+		template<typename T>
+		using ToAssetID = std::unordered_map<T, AssetID>;
 
 		inline static AssetManager& Get()
 		{
@@ -36,7 +38,8 @@ namespace Nova
 		static std::shared_ptr<TAsset> LoadFromFile(const std::filesystem::path& assetPath);
 
 		AssetRegistry m_AssetRegistry;
-		std::unordered_map<std::filesystem::path, AssetID> m_PathToAssetID;
+		ToAssetID<std::string> m_NameToAssetID;
+		ToAssetID<std::filesystem::path> m_PathToAssetID;
 
 		static AssetManager* m_Instance;
 	};
@@ -66,6 +69,7 @@ namespace Nova
 		std::shared_ptr<TAsset> asset = std::make_shared<TAsset>(assetID, name, std::forward<Args>(args)...);
 
 		Get().m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
+		Get().m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
 		return asset;
 	}
 }

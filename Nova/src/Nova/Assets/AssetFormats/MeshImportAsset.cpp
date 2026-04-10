@@ -16,9 +16,9 @@ const Nova::MeshOptionalSettings& Nova::MeshImportAsset::GetSettings() const
 
 void Nova::MeshImportAsset::SetSettings(const MeshOptionalSettings& settings)
 {
-	auto oldSettings = m_Settings;
+	bool needsReload = m_Settings != settings;
 	m_Settings = settings;
-	if (oldSettings != m_Settings) ReloadFromSource();
+	if (needsReload) ReloadFromSource();
 }
 
 std::shared_ptr<Nova::Graphics::Mesh> Nova::MeshImportAsset::GetMesh()
@@ -26,7 +26,7 @@ std::shared_ptr<Nova::Graphics::Mesh> Nova::MeshImportAsset::GetMesh()
 	if (m_Mesh) return m_Mesh;
 
 	ReloadFromSource();
-	NOVA_CORE_WARN("MeshImportAsset ({0}) has been unloaded and is forced to reload from source!", Assets::GetStringAssetID(GetAssetID()));
+	NOVA_CORE_WARN("MeshImportAsset ({0}) has been unloaded and is forced to reload from source!", GetAssetID().ToString());
 	return m_Mesh;
 }
 

@@ -15,16 +15,6 @@ Nova::AssetManager::~AssetManager()
 	m_Instance = nullptr;
 }
 
-bool Nova::AssetManager::DestroyAsset(const AssetID& assetID)
-{
-	auto asset = GetAsset<Asset>(assetID);
-	if (!asset) return false;
-
-	asset->DisposeAsset();
-	Get().m_AssetRegistry.erase(assetID);
-	return true;
-}
-
 template<>
 std::shared_ptr<Nova::MeshSourceAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
 {
@@ -57,6 +47,23 @@ std::shared_ptr<TAsset> Nova::AssetManager::LoadFromFile(const std::filesystem::
 	}
 
 	Get().m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
+	Get().m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
 	Get().m_PathToAssetID.insert_or_assign(assetPath, asset->GetAssetID());
 	return asset;
+}
+
+bool Nova::AssetManager::DestroyAsset(const AssetID& assetID)
+{
+	auto asset = GetAsset<Asset>(assetID);
+	if (!asset) return false;
+
+	asset->DisposeAsset();
+	Get().m_AssetRegistry.erase(assetID);
+	Get().m_NameToAssetID.erase(asset->GetName());
+	if (asset->GetAssetType() == EAssetType::MeshSource) // TODO: Replace with some other way of figuring out if this is a SourceAsset
+	{
+		auto sourceAsset = std::static_pointer_cast<SourceAsset>(asset);
+		Get().m_PathToAssetID.erase(sourceAsset->GetAssetPath());
+	}
+	return true;
 }

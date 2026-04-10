@@ -17,6 +17,18 @@ namespace Nova::Graphics
 		XMFLOAT3 Color;
 	};
 
+	struct SkyboxVertex
+	{
+		SkyboxVertex(float x, float y, float z)
+		{
+			Position = { x, y, z };
+		}
+
+		XMFLOAT3 Position;
+	};
+
 	template<typename T>
-	concept VertexFormat = std::same_as<std::remove_cvref_t<T>, Vertex>;
+	concept VertexFormat =
+		std::same_as<std::remove_cvref_t<T>, Vertex> ||
+		std::same_as<std::remove_cvref_t<T>, SkyboxVertex>;
 }

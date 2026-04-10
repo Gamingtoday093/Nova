@@ -5,6 +5,7 @@
 #include "Nova/Input/Input.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Assets/AssetFormats/MeshImportAsset.h"
+#include "Nova/Tools/Stopwatch.h"
 
 Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_TransformBuffer(EBindType::VertexShader), m_AnimationBuffer(EBindType::VertexShader, 256)
@@ -52,6 +53,7 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_Rasterizer.Bind();
 
 	auto ship = AssetManager::GetAsset<MeshSourceAsset>("Assets/Models/Ship.fbx");
+
 	m_ShipMesh = ship->GetMeshAssets().at(0)->GetMesh();
 }
 

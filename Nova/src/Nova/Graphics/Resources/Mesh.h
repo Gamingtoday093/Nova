@@ -23,26 +23,18 @@ namespace Nova::Graphics
 	{
 		MeshData() = default;
 		template<VertexFormat TVertex>
-		MeshData(const std::vector<TVertex>& vertices, const std::vector<uint16_t>& indices, const std::vector<SubMesh>& subMeshes);
+		MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes);
 
-		const void* VertexData = nullptr;
-		uint32_t VertexDataSize = 0;
-		uint32_t VertexElementSize = 0;
 		std::vector<Vertex> Vertices;
 		std::vector<uint16_t> Indices;
 		std::vector<SubMesh> SubMeshes;
 	};
 
 	template<VertexFormat TVertex>
-	MeshData::MeshData(const std::vector<TVertex>& vertices, const std::vector<uint16_t>& indices, const std::vector<SubMesh>& subMeshes)
-	{
-		VertexElementSize = sizeof(TVertex);
-		VertexData = std::data(vertices);
-		VertexDataSize = VertexElementSize * uint32_t(vertices.size());
-
-		Vertices = vertices;
-		Indices = indices;
-		SubMeshes = subMeshes;
+	MeshData::MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes) :
+		Vertices(vertices), Indices(indices), SubMeshes(subMeshes)
+	{ 
+	
 	}
 
 	class Mesh

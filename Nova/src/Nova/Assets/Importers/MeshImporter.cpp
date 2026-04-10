@@ -37,13 +37,15 @@ std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromFile(
 		aiProcess_PopulateArmatureData |
 		aiProcess_LimitBoneWeights;
 
+	// TODO: Try get Data from custom cache instead of actual .fbx file, should be way faster!
+	// This takes about 10-20ms, Cooked Binary format probably takes max 5ms
 	Assimp::Importer importer;
-	auto scene = importer.ReadFile(assetPath.string(), importFlags); // TODO: Try get Data from custom cache instead of actual .fbx file, should be way faster!
+	auto scene = importer.ReadFile(assetPath.string(), importFlags);
 
 	if (!scene) return nullptr;
 
 	std::shared_ptr<MeshSourceAsset> meshSource = std::make_shared<MeshSourceAsset>(
-		Assets::NewAssetID(), // IF: .asset doesn't exist
+		AssetID::NewID(), // IF: .asset doesn't exist
 		assetPath);
 
 	// TODO: Create MeshImportAssets etc. from .asset so LoadFromNode() can use them
@@ -51,6 +53,7 @@ std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromFile(
 	LoadFromNodeRecursive(scene, scene->mRootNode, meshSource);
 
 	// Create/Replace .asset
+	// TODO: Create Cooked Binary Format
 
 	return meshSource;
 }
@@ -72,15 +75,17 @@ void Nova::Assets::MeshImporter::ReloadFromFile(std::shared_ptr<MeshSourceAsset>
 	}
 
 	Assimp::Importer importer;
-	auto scene = importer.ReadFile(meshSource->GetAssetPath().string(), importFlags); // TODO: Try get Data from custom cache instead of actual .fbx file, should be way faster!
-
+	auto scene = importer.ReadFile(meshSource->GetAssetPath().string(), importFlags);
+	
 	if (!scene)
 	{
-		NOVA_CORE_ERROR("Failed to Reload MeshSourceAsset ({0})", Assets::GetStringAssetID(meshSource->GetAssetID()));
+		NOVA_CORE_ERROR("Failed to Reload MeshSourceAsset ({0})", meshSource->GetAssetID().ToString());
 		return;
 	}
 
 	LoadFromNodeRecursive(scene, scene->mRootNode, meshSource);
+
+	// TODO: Create Cooked Binary Format
 }
 
 void Nova::Assets::MeshImporter::LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource)
@@ -93,6 +98,8 @@ void Nova::Assets::MeshImporter::LoadFromNodeRecursive(const aiScene* scene, aiN
 
 void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource)
 {
+	if (node->mNumMeshes == 0) return;
+
 	std::shared_ptr<MeshImportAsset> importMesh;
 	for (auto& importMeshAsset : meshSource->GetMeshAssets())
 		if (node->mName.C_Str() == importMeshAsset->GetName())
@@ -149,19 +156,16 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 		}
 	}
 
-	if (vertices.size() > 0)
+	if (!importMesh)
 	{
-		if (!importMesh)
-		{
-			importMesh = AssetManager::CreateAsset<MeshImportAsset>(Assets::NewAssetID(), node->mName.C_Str(), meshSource);
-			meshSource->m_MeshAssets.push_back(importMesh);
-		}
-
-		if (subMeshes.size() == 1) subMeshes.clear();
-		auto meshData = Graphics::MeshData(vertices, indices, subMeshes);
-
-		bool readWriteable = optionalSettings.ReadWriteable.value_or(meshSource->GetSettings().Meshes.ReadWriteable);
-		if (importMesh->m_Mesh) *importMesh->m_Mesh = Graphics::Mesh(meshData, readWriteable);
-		else importMesh->m_Mesh = std::make_shared<Graphics::Mesh>(meshData, readWriteable);
+		importMesh = AssetManager::CreateAsset<MeshImportAsset>(AssetID::NewID(), node->mName.C_Str(), meshSource);
+		meshSource->m_MeshAssets.push_back(importMesh);
 	}
+
+	if (subMeshes.size() == 1) subMeshes.clear();
+	auto meshData = Graphics::MeshData(std::move(vertices), std::move(indices), std::move(subMeshes));
+
+	bool readWriteable = optionalSettings.ReadWriteable.value_or(meshSource->GetSettings().Meshes.ReadWriteable);
+	if (importMesh->m_Mesh) *importMesh->m_Mesh = Graphics::Mesh(meshData, readWriteable);
+	else importMesh->m_Mesh = std::make_shared<Graphics::Mesh>(meshData, readWriteable);
 }
