@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "Renderer.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"

@@ -1,7 +1,7 @@
 #pragma once
-#include <windows.h>
-#include <functional>
 #include "WindowEvents.hpp"
+#include <functional>
+#include <windows.h>
 
 namespace Nova
 {

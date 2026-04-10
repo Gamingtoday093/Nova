@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "WindowApplication.h"
 #include "Nova/Input/Input.h"
 #include "Nova/Time/Time.h"

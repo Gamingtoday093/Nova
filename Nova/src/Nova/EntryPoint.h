@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Application/IApplication.hpp"
 
 namespace Nova

@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "Time.h"
 
 Nova::Time* Nova::Time::m_Instance;

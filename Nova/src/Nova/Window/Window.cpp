@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "Window.h"
 #include "../../../resources/Icon/resource.h"
 #include "Nova/Input/Input.h"

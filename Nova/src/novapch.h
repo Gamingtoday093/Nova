@@ -1,12 +1,7 @@
 #pragma once
 
-// std
-#include <string>
-#include <filesystem>
-#include <chrono>
-#include <memory>
-#include <vector>
-#include <unordered_map>
+// Core (std)
+#include "Nova/NovaCore.h"
 
 // dx11
 #include <wrl.h>

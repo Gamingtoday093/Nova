@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "Sampler.h"
 #include "Nova/Graphics/Logging/HRAsserts.h"
 #include "Nova/Graphics/DX11.h"

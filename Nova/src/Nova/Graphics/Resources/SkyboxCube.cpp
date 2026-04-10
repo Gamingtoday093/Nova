@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "SkyboxCube.h"
 
 Nova::Graphics::SkyboxCube::SkyboxCube()

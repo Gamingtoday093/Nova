@@ -32,8 +32,8 @@ project "Nova"
 	language "C++"
     cppdialect "C++20"
 	
-	pchheader "pch.h"
-	pchsource "Nova/src/pch.cpp"
+	pchheader "novapch.h"
+	pchsource "Nova/src/novapch.cpp"
 	
 	AssimpDLL = "Nova/vendor/Assimp/assimp-vc143-mt.dll"
 	
@@ -116,6 +116,9 @@ project "Game"
 	location "Game"
 	language "C++"
     cppdialect "C++20"
+	
+	pchheader "pch.h"
+	pchsource "Game/src/pch.cpp"
 	
 	targetdir(TargetDir)
     objdir(ObjectDir)

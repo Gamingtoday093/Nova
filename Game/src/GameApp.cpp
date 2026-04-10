@@ -1,4 +1,5 @@
-#include <Nova/EntryPoint.hpp>
+#include "pch.h"
+#include <Nova/EntryPoint.h>
 #include <Nova/Application/WindowApplication.h>
 
 class GameApp : public Nova::WindowApplication
@@ -8,7 +9,7 @@ public:
 
 	void OnStart() override
 	{
-
+		
 	}
 
 	void OnUpdate() override

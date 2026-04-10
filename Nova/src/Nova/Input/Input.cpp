@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "novapch.h"
 #include "Input.h"
 
 Nova::Input* Nova::Input::m_Instance;
