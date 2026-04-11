@@ -22,7 +22,7 @@ bool Nova::Assets::MeshImporter::Supported(const std::filesystem::path& assetPat
 	return false;
 }
 
-std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromFile(const std::filesystem::path& assetPath)
+std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromPath(const std::filesystem::path& assetPath)
 {
 	// TODO: Read "assetPath .asset" Ex: SillyCat.fbx.asset
 
@@ -58,7 +58,7 @@ std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromFile(
 	return meshSource;
 }
 
-void Nova::Assets::MeshImporter::ReloadFromFile(std::shared_ptr<MeshSourceAsset> meshSource)
+void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<MeshSourceAsset> meshSource)
 {
 	// TODO: Combine Duplicate Logic
 	int importFlags =

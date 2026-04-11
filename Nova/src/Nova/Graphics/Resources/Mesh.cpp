@@ -1,5 +1,6 @@
 #include "novapch.h"
 #include "Mesh.h"
+#include "Nova/Graphics/DX11.h"
 
 Nova::Graphics::Mesh::Mesh()
 {
@@ -20,14 +21,13 @@ void Nova::Graphics::Mesh::Bind() const
 	m_IndexBuffer.Bind();
 }
 
-uint32_t Nova::Graphics::Mesh::GetIndexLength() const
+void Nova::Graphics::Mesh::DrawIndexed() const
 {
-	return m_IndexBuffer.Length();
-}
-
-std::span<const Nova::Graphics::SubMesh> Nova::Graphics::Mesh::GetSubMeshes() const
-{
-	return m_SubMeshes;
+	if (m_SubMeshes.empty()) DX11::GetContext()->DrawIndexed(m_IndexBuffer.Length(), 0, 0);
+	for (auto& subMesh : m_SubMeshes)
+	{
+		DX11::GetContext()->DrawIndexed(subMesh.IndexLength, subMesh.IndexOffset, subMesh.VertexOffset);
+	}
 }
 
 bool Nova::Graphics::Mesh::ReadWriteable() const

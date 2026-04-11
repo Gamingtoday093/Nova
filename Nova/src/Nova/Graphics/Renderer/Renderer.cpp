@@ -1,11 +1,13 @@
 #include "novapch.h"
-#include "Renderer.h"
+#include "Nova/Assets/AssetFormats/MeshImportAsset.h"
+#include "Nova/Assets/AssetFormats/MeshSourceAsset.h"
+#include "Nova/Assets/AssetManager.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
+#include "Nova/Graphics/Bindables/Texture/CubeTexture.h"
 #include "Nova/Input/Input.h"
-#include "Nova/Assets/AssetManager.h"
-#include "Nova/Assets/AssetFormats/MeshImportAsset.h"
 #include "Nova/Tools/Stopwatch.h"
+#include "Renderer.h"
 
 Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_TransformBuffer(EBindType::VertexShader), m_AnimationBuffer(EBindType::VertexShader, 256)
@@ -44,7 +46,20 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	
 	m_VertexShader.Create("VertexShader_vs");
 	m_PixelShader.Create("PixelShader_ps");
-	
+
+	auto ship = AssetManager::GetAsset<MeshSourceAsset>("Assets/Models/Ship.fbx");
+
+	m_ShipMesh = ship->GetMeshAssets().at(0)->GetMesh();
+
+	m_SkyboxLayout.Create<SkyboxVertex>("Skybox_vs");
+	m_SkyboxVertexShader.Create("Skybox_vs");
+	m_SkyboxShader.Create("Skybox_ps");
+	m_SkyboxRasterizer.Create(ECullMode::Front);
+	m_SkyboxDepth.Create(EDepthMode::ReadOnly);
+}
+
+void Nova::Graphics::Renderer::RenderCube(const Camera& camera)
+{
 	m_VertexShader.Bind();
 	m_PixelShader.Bind();
 
@@ -52,13 +67,6 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_DepthStencilState.Bind();
 	m_Rasterizer.Bind();
 
-	auto ship = AssetManager::GetAsset<MeshSourceAsset>("Assets/Models/Ship.fbx");
-
-	m_ShipMesh = ship->GetMeshAssets().at(0)->GetMesh();
-}
-
-void Nova::Graphics::Renderer::RenderCube(const Camera& camera)
-{
 	m_VertexBuffer.Bind();
 	m_IndexBuffer.Bind();
 
@@ -77,6 +85,13 @@ void Nova::Graphics::Renderer::RenderCube(const Camera& camera)
 
 void Nova::Graphics::Renderer::RenderShip(const Camera& camera)
 {
+	m_VertexShader.Bind();
+	m_PixelShader.Bind();
+
+	m_InputLayout.Bind();
+	m_DepthStencilState.Bind();
+	m_Rasterizer.Bind();
+
 	m_ShipMesh->Bind();
 
 	m_TransformBuffer.Data.ProjectionViewMatrix =
@@ -89,10 +104,32 @@ void Nova::Graphics::Renderer::RenderShip(const Camera& camera)
 	m_TransformBuffer.ApplyBuffer();
 	m_TransformBuffer.Bind();
 
-	auto subMeshes = m_ShipMesh->GetSubMeshes();
-	if (subMeshes.empty()) DX11::GetContext()->DrawIndexed(m_ShipMesh->GetIndexLength(), 0, 0);
-	for (auto& subMesh : subMeshes)
-	{
-		DX11::GetContext()->DrawIndexed(subMesh.IndexLength, subMesh.IndexOffset, subMesh.VertexOffset);
-	}
+	m_ShipMesh->DrawIndexed();
+}
+
+void Nova::Graphics::Renderer::RenderSkybox(const CubeTexture& skyboxTexture, const Camera& camera)
+{
+	m_SkyboxVertexShader.Bind();
+	m_SkyboxShader.Bind();
+
+	m_SkyboxLayout.Bind();
+	m_SkyboxDepth.Bind();
+	m_SkyboxRasterizer.Bind();
+
+	m_SkyboxMesh.Bind();
+
+	m_TransformBuffer.Data.ProjectionViewMatrix =
+		camera.GetViewMatrix() *
+		DirectX::XMMatrixPerspectiveFovLH(camera.FovAngle, m_Framework.GetAspectRatio(), camera.NearClipPlane, camera.FarClipPlane);
+
+	m_TransformBuffer.Data.ModelMatrix =
+		DirectX::XMMatrixIdentity();
+
+	m_TransformBuffer.ApplyBuffer();
+	m_TransformBuffer.Bind();
+
+	skyboxTexture.Bind();
+	m_SkyboxSampler.Bind();
+
+	m_SkyboxMesh.DrawIndexed();
 }

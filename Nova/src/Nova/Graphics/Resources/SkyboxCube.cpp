@@ -1,5 +1,6 @@
 #include "novapch.h"
 #include "SkyboxCube.h"
+#include "Nova/Graphics/DX11.h"
 
 Nova::Graphics::SkyboxCube::SkyboxCube()
 {
@@ -31,4 +32,9 @@ void Nova::Graphics::SkyboxCube::Bind() const
 {
 	m_VertexBuffer.Bind();
 	m_IndexBuffer.Bind();
+}
+
+void Nova::Graphics::SkyboxCube::DrawIndexed() const
+{
+	DX11::GetContext()->DrawIndexed(m_IndexBuffer.Length(), 0, 0);
 }

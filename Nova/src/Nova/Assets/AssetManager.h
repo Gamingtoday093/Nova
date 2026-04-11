@@ -1,5 +1,11 @@
 #pragma once
-#include "AssetFormats/MeshSourceAsset.h"
+#include "Asset.h"
+
+namespace Nova
+{
+	class MeshSourceAsset;
+	class SkyboxAsset;
+}
 
 namespace Nova
 {
@@ -9,11 +15,14 @@ namespace Nova
 		AssetManager();
 		~AssetManager();
 
-		template<SourceAssetType TAsset>
+		template<typename TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false); }
 
 		template<>
 		static std::shared_ptr<MeshSourceAsset> GetAsset<MeshSourceAsset>(const std::filesystem::path& assetPath);
+
+		template<>
+		static std::shared_ptr<SkyboxAsset> GetAsset<SkyboxAsset>(const std::filesystem::path& assetPath);
 
 		template<AssetType TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const AssetID& assetID);
@@ -35,7 +44,7 @@ namespace Nova
 		}
 
 		template<SourceAssetType TAsset, class Importer>
-		static std::shared_ptr<TAsset> LoadFromFile(const std::filesystem::path& assetPath);
+		static std::shared_ptr<TAsset> LoadFromPath(const std::filesystem::path& assetPath);
 
 		AssetRegistry m_AssetRegistry;
 		ToAssetID<std::string> m_NameToAssetID;

@@ -10,8 +10,8 @@ namespace Nova::Assets
 	{
 	public:
 		static bool Supported(const std::filesystem::path& assetPath);
-		static std::shared_ptr<MeshSourceAsset> LoadFromFile(const std::filesystem::path& assetPath);
-		static void ReloadFromFile(std::shared_ptr<MeshSourceAsset> meshSource);
+		static std::shared_ptr<MeshSourceAsset> LoadFromPath(const std::filesystem::path& assetPath);
+		static void ReloadFromPath(std::shared_ptr<MeshSourceAsset> meshSource);
 
 	private:
 		static void LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource);

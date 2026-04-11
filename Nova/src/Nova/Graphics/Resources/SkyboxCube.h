@@ -10,6 +10,7 @@ namespace Nova::Graphics
 		SkyboxCube();
 
 		void Bind() const;
+		void DrawIndexed() const;
 
 	private:
 		VertexBuffer m_VertexBuffer;

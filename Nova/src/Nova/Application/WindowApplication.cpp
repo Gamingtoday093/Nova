@@ -6,6 +6,7 @@
 #include "Nova/Graphics/Renderer/Renderer.h"
 #include "Nova/Scene/Scene.h"
 #include "Nova/Assets/AssetManager.h"
+#include "Nova/Assets/AssetFormats/SkyboxAsset.h"
 
 Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startupInfo) : IApplication(startupInfo)
 {
@@ -73,6 +74,10 @@ void Nova::WindowApplication::RenderFrame()
 {
 	//m_Renderer->RenderCube(m_Scene->m_FreeLookCamera);
 	m_Renderer->RenderShip(m_Scene->m_FreeLookCamera);
+
+	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
+
+	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->m_FreeLookCamera);
 }
 
 void Nova::WindowApplication::BeginFrame()

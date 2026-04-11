@@ -16,6 +16,7 @@ namespace Nova
 		Skeleton,
 		Animation,
 		Texture,
+		Skybox,
 		Material,
 		Prefab
 	};
@@ -53,6 +54,7 @@ namespace Nova
 	class SourceAsset : public Asset
 	{
 	public:
+		explicit SourceAsset(const AssetID& assetID, const std::string& name);
 		explicit SourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
 		~SourceAsset() override = default;
 

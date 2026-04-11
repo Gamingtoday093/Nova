@@ -1,6 +1,8 @@
 #include "novapch.h"
 #include "AssetManager.h"
 #include "Importers/MeshImporter.h"
+#include "Importers/SkyboxImporter.h"
+
 
 Nova::AssetManager* Nova::AssetManager::m_Instance;
 
@@ -18,11 +20,17 @@ Nova::AssetManager::~AssetManager()
 template<>
 std::shared_ptr<Nova::MeshSourceAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
 {
-	return LoadFromFile<MeshSourceAsset, Assets::MeshImporter>(assetPath);
+	return LoadFromPath<MeshSourceAsset, Assets::MeshImporter>(assetPath);
+}
+
+template<>
+std::shared_ptr<Nova::SkyboxAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
+{
+	return LoadFromPath<SkyboxAsset, Assets::SkyboxImporter>(assetPath);
 }
 
 template<Nova::SourceAssetType TAsset, class Importer>
-std::shared_ptr<TAsset> Nova::AssetManager::LoadFromFile(const std::filesystem::path& assetPath)
+std::shared_ptr<TAsset> Nova::AssetManager::LoadFromPath(const std::filesystem::path& assetPath)
 {
 	auto existingID = Get().m_PathToAssetID.find(assetPath);
 	if (existingID != Get().m_PathToAssetID.end()) return GetAsset<TAsset>(existingID->second);
@@ -35,11 +43,11 @@ std::shared_ptr<TAsset> Nova::AssetManager::LoadFromFile(const std::filesystem::
 
 	if (!Importer::Supported(assetPath))
 	{
-		NOVA_CORE_WARN("Importer does not allow {0} from {1}", TAsset::GetAssetName_s(), assetPath.extension().string());
+		NOVA_CORE_WARN("Importer does not allow {0} from {1}", TAsset::GetAssetName_s(), assetPath.has_extension() ? assetPath.extension().string() : assetPath.string());
 		return nullptr;
 	}
 
-	std::shared_ptr<TAsset> asset = Importer::LoadFromFile(assetPath);
+	std::shared_ptr<TAsset> asset = Importer::LoadFromPath(assetPath);
 	if (!asset)
 	{
 		NOVA_CORE_ERROR("Importer failed to load {0} from {1}", TAsset::GetAssetName_s(), assetPath.string());

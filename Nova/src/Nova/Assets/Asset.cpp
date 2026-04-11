@@ -18,6 +18,8 @@ const std::string& Nova::Asset::GetName() const
     return m_Name;
 }
 
+Nova::SourceAsset::SourceAsset(const AssetID& assetID, const std::string& name) : Asset(assetID, name) { }
+
 Nova::SourceAsset::SourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath) : Asset(assetID, assetPath.stem().string())
 {
     m_AssetPath = assetPath;

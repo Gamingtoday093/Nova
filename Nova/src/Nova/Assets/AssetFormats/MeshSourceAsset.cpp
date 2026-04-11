@@ -25,7 +25,7 @@ void Nova::MeshSourceAsset::SetSettings(const MeshImportSettings& settings)
 
 void Nova::MeshSourceAsset::ReloadFromSource()
 {
-	Assets::MeshImporter::ReloadFromFile(AssetManager::GetAsset<MeshSourceAsset>(GetAssetID()));
+	Assets::MeshImporter::ReloadFromPath(AssetManager::GetAsset<MeshSourceAsset>(GetAssetID()));
 }
 
 void Nova::MeshSourceAsset::UnloadUnused(bool loadedAssets)

@@ -44,8 +44,7 @@ namespace Nova::Graphics
 		Mesh(const MeshData& meshData, bool readWriteable = false);
 
 		void Bind() const;
-		uint32_t GetIndexLength() const;
-		std::span<const SubMesh> GetSubMeshes() const;
+		void DrawIndexed() const;
 
 		bool ReadWriteable() const;
 		MeshData* GetReadWriteData() const;

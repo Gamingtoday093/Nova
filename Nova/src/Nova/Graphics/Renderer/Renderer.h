@@ -10,10 +10,17 @@
 #include "Nova/Graphics/Bindables/Mesh/VertexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Graphics/Bindables/Shader/VertexShader.h"
+#include "Nova/Graphics/Bindables/Shader/Sampler.h"
 #include "Nova/Graphics/Bindables/Shader/PixelShader.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
 #include "Nova/Scene/Camera/Camera.hpp"
 #include "Nova/Graphics/Resources/Mesh.h"
+#include "Nova/Graphics/Resources/SkyboxCube.h"
+
+namespace Nova::Graphics
+{
+	class CubeTexture;
+}
 
 namespace Nova::Graphics
 {
@@ -24,9 +31,18 @@ namespace Nova::Graphics
 
 		void RenderCube(const Camera& camera);
 		void RenderShip(const Camera& camera);
+		void RenderSkybox(const CubeTexture& skyboxTexture, const Camera& camera);
 
 	private:
 		DX11& m_Framework;
+
+		SkyboxCube m_SkyboxMesh;
+		InputLayout m_SkyboxLayout;
+		VertexShader m_SkyboxVertexShader;
+		Sampler m_SkyboxSampler;
+		PixelShader m_SkyboxShader;
+		Rasterizer m_SkyboxRasterizer;
+		DepthStencilState m_SkyboxDepth;
 
 		std::shared_ptr<Mesh> m_ShipMesh;
 		VertexBuffer m_VertexBuffer;

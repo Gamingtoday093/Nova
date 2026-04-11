@@ -16,7 +16,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 #ifdef DEBUG
 	deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-
+	
 	D3D_FEATURE_LEVEL featureLevel;
 	std::array<D3D_FEATURE_LEVEL, 2> featureLevels = {
 		D3D_FEATURE_LEVEL_11_1,
