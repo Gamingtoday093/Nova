@@ -23,7 +23,12 @@ void Nova::Graphics::Mesh::Bind() const
 
 void Nova::Graphics::Mesh::DrawIndexed() const
 {
-	if (m_SubMeshes.empty()) DX11::GetContext()->DrawIndexed(m_IndexBuffer.Length(), 0, 0);
+	if (m_SubMeshes.empty())
+	{
+		DX11::GetContext()->DrawIndexed(m_IndexBuffer.Length(), 0, 0);
+		return;
+	}
+
 	for (auto& subMesh : m_SubMeshes)
 	{
 		DX11::GetContext()->DrawIndexed(subMesh.IndexLength, subMesh.IndexOffset, subMesh.VertexOffset);

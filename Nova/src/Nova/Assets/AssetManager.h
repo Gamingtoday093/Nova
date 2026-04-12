@@ -16,7 +16,7 @@ namespace Nova
 		~AssetManager();
 
 		template<typename TAsset>
-		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false); }
+		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false, "Unsupported SourceAsset"); }
 
 		template<>
 		static std::shared_ptr<MeshSourceAsset> GetAsset<MeshSourceAsset>(const std::filesystem::path& assetPath);

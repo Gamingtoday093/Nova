@@ -9,7 +9,7 @@
 
 namespace Nova::Asserts
 {
-	constexpr const char* PROJECT_ROOT = "Nova\\src\\";
+	constexpr std::string_view PROJECT_ROOT = "Nova\\src\\";
 
 	inline consteval std::string_view TrimPath(std::string_view fileFullPath, std::string_view rootPath)
 	{
