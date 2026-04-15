@@ -1,13 +1,13 @@
 #include "novapch.h"
 #include "MeshImportAsset.h"
-#include "MeshSourceAsset.h"
+#include "ModelSourceAsset.h"
 
 bool Nova::MeshOptionalSettings::operator==(const MeshOptionalSettings& other) const
 {
 	return memcmp(this, &other, sizeof(MeshOptionalSettings)) == 0;
 }
 
-Nova::MeshImportAsset::MeshImportAsset(const AssetID& assetID, const std::string& name, std::weak_ptr<MeshSourceAsset> meshSource) : MeshAsset(assetID, name), m_MeshSource(std::move(meshSource)) { }
+Nova::MeshImportAsset::MeshImportAsset(const AssetID& assetID, const std::string& name, std::weak_ptr<ModelSourceAsset> meshSource) : MeshAsset(assetID, name), m_MeshSource(std::move(meshSource)) { }
 
 const Nova::MeshOptionalSettings& Nova::MeshImportAsset::GetSettings() const
 {

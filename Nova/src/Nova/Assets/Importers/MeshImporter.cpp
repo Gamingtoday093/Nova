@@ -22,7 +22,7 @@ bool Nova::Assets::MeshImporter::Supported(const std::filesystem::path& assetPat
 	return false;
 }
 
-std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromPath(const std::filesystem::path& assetPath)
+std::shared_ptr<Nova::ModelSourceAsset> Nova::Assets::MeshImporter::LoadFromPath(const std::filesystem::path& assetPath)
 {
 	// TODO: Read "assetPath .asset" Ex: SillyCat.fbx.asset
 
@@ -44,7 +44,7 @@ std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromPath(
 
 	if (!scene) return nullptr;
 
-	std::shared_ptr<MeshSourceAsset> meshSource = std::make_shared<MeshSourceAsset>(
+	std::shared_ptr<ModelSourceAsset> meshSource = std::make_shared<ModelSourceAsset>(
 		AssetID::NewID(), // IF: .asset doesn't exist
 		assetPath);
 
@@ -58,7 +58,7 @@ std::shared_ptr<Nova::MeshSourceAsset> Nova::Assets::MeshImporter::LoadFromPath(
 	return meshSource;
 }
 
-void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<MeshSourceAsset> meshSource)
+void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<ModelSourceAsset> meshSource)
 {
 	// TODO: Combine Duplicate Logic
 	int importFlags =
@@ -79,7 +79,7 @@ void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<MeshSourceAsset>
 	
 	if (!scene)
 	{
-		NOVA_CORE_ERROR("Failed to Reload MeshSourceAsset ({0})", meshSource->GetAssetID().ToString());
+		NOVA_CORE_ERROR("Failed to Reload ModelSourceAsset ({0})", meshSource->GetAssetID().ToString());
 		return;
 	}
 
@@ -88,7 +88,7 @@ void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<MeshSourceAsset>
 	// TODO: Create Cooked Binary Format
 }
 
-void Nova::Assets::MeshImporter::LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource)
+void Nova::Assets::MeshImporter::LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<ModelSourceAsset> meshSource)
 {
 	LoadFromNode(scene, node, meshSource);
 
@@ -96,7 +96,7 @@ void Nova::Assets::MeshImporter::LoadFromNodeRecursive(const aiScene* scene, aiN
 		LoadFromNodeRecursive(scene, node->mChildren[childIndex], meshSource);
 }
 
-void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource)
+void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node, std::shared_ptr<ModelSourceAsset> meshSource)
 {
 	if (node->mNumMeshes == 0) return;
 

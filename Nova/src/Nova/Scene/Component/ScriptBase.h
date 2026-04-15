@@ -30,6 +30,8 @@ namespace Nova
 		virtual void Awake() { }
 		virtual void Start() { }
 		virtual void Update() { }
+		virtual void OnEnable() { }
+		virtual void OnDisable() { }
 		
 		Entity m_Entity;
 

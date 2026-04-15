@@ -73,10 +73,10 @@ void Nova::WindowApplication::Run()
 void Nova::WindowApplication::RenderFrame()
 {
 	//m_Renderer->RenderCube(m_Scene->m_FreeLookCamera);
-	m_Renderer->RenderShip(m_Scene->GetCamera());
+	//m_Renderer->RenderShip(m_Scene->GetCamera());
+	m_Scene->RenderEntities(*m_Renderer);
 
 	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
-
 	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->GetCamera());
 }
 

@@ -1,12 +1,14 @@
 #include "novapch.h"
 #include "Nova/Assets/AssetFormats/MeshImportAsset.h"
-#include "Nova/Assets/AssetFormats/MeshSourceAsset.h"
+#include "Nova/Assets/AssetFormats/ModelSourceAsset.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
 #include "Nova/Graphics/Bindables/Texture/CubeTexture.h"
 #include "Nova/Input/Input.h"
 #include "Nova/Tools/Stopwatch.h"
+#include "Nova/Graphics/Resources/Mesh.h"
+#include "Nova/Graphics/Resources/Transform.h"
 #include "Renderer.h"
 
 Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
@@ -47,7 +49,7 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 	m_VertexShader.Create("VertexShader_vs");
 	m_PixelShader.Create("PixelShader_ps");
 
-	auto ship = AssetManager::GetAsset<MeshSourceAsset>("Assets/Models/Ship.fbx");
+	auto ship = AssetManager::GetAsset<ModelSourceAsset>("Assets/Models/Ship.fbx");
 
 	m_ShipMesh = ship->GetMeshAssets().at(0)->GetMesh();
 
@@ -105,6 +107,30 @@ void Nova::Graphics::Renderer::RenderShip(const Camera& camera)
 	m_TransformBuffer.Bind();
 
 	m_ShipMesh->DrawIndexed();
+}
+
+void Nova::Graphics::Renderer::RenderModel(const Transform& transform, const Mesh& mesh, const Camera& camera)
+{
+	m_VertexShader.Bind();
+	m_PixelShader.Bind();
+
+	m_InputLayout.Bind();
+	m_DepthStencilState.Bind();
+	m_Rasterizer.Bind();
+
+	mesh.Bind();
+
+	m_TransformBuffer.Data.ProjectionViewMatrix =
+		camera.GetViewMatrix() *
+		DirectX::XMMatrixPerspectiveFovLH(camera.FovAngle, m_Framework.GetAspectRatio(), camera.NearClipPlane, camera.FarClipPlane);
+
+	m_TransformBuffer.Data.ModelMatrix =
+		transform.CalculateMatrix();
+
+	m_TransformBuffer.ApplyBuffer();
+	m_TransformBuffer.Bind();
+
+	mesh.DrawIndexed();
 }
 
 void Nova::Graphics::Renderer::RenderSkybox(const CubeTexture& skyboxTexture, const Camera& camera)

@@ -3,7 +3,7 @@
 
 namespace Nova
 {
-	class MeshSourceAsset;
+	class ModelSourceAsset;
 	class SkyboxAsset;
 }
 
@@ -19,7 +19,7 @@ namespace Nova
 		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false, "Unsupported SourceAsset"); }
 
 		template<>
-		static std::shared_ptr<MeshSourceAsset> GetAsset<MeshSourceAsset>(const std::filesystem::path& assetPath);
+		static std::shared_ptr<ModelSourceAsset> GetAsset<ModelSourceAsset>(const std::filesystem::path& assetPath);
 
 		template<>
 		static std::shared_ptr<SkyboxAsset> GetAsset<SkyboxAsset>(const std::filesystem::path& assetPath);

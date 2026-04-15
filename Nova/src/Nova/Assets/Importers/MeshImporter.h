@@ -1,5 +1,5 @@
 #pragma once
-#include "Nova/Assets/AssetFormats/MeshSourceAsset.h"
+#include "Nova/Assets/AssetFormats/ModelSourceAsset.h"
 
 struct aiNode;
 struct aiScene;
@@ -10,11 +10,11 @@ namespace Nova::Assets
 	{
 	public:
 		static bool Supported(const std::filesystem::path& assetPath);
-		static std::shared_ptr<MeshSourceAsset> LoadFromPath(const std::filesystem::path& assetPath);
-		static void ReloadFromPath(std::shared_ptr<MeshSourceAsset> meshSource);
+		static std::shared_ptr<ModelSourceAsset> LoadFromPath(const std::filesystem::path& assetPath);
+		static void ReloadFromPath(std::shared_ptr<ModelSourceAsset> meshSource);
 
 	private:
-		static void LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource);
-		static void LoadFromNode(const aiScene* scene, aiNode* node, std::shared_ptr<MeshSourceAsset> meshSource);
+		static void LoadFromNodeRecursive(const aiScene* scene, aiNode* node, std::shared_ptr<ModelSourceAsset> meshSource);
+		static void LoadFromNode(const aiScene* scene, aiNode* node, std::shared_ptr<ModelSourceAsset> meshSource);
 	};
 }

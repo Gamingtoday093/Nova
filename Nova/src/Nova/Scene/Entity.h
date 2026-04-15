@@ -73,7 +73,7 @@ namespace Nova
 		auto* script = TryGetScript(scriptCollection, scriptID);
 		if (script != nullptr)
 		{
-			NOVA_CORE_WARN("Entity already has {}", TScript::GetScriptName_s());
+			NOVA_CORE_ERROR("Entity already has {}", TScript::GetScriptName_s());
 			return static_cast<TScript&>(*script);
 		}
 

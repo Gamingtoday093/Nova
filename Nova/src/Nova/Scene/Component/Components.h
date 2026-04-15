@@ -1,5 +1,7 @@
 #pragma once
 #include "ScriptBase.h"
+#include "Nova/Graphics/Resources/Transform.h"
+#include "Nova/Graphics/Resources/Mesh.h"
 
 namespace Nova
 {
@@ -12,12 +14,16 @@ namespace Nova
 
 	struct TransformComponent
 	{
-
+		Graphics::Transform Transform;
 	};
 
 	struct MeshRendererComponent
 	{
+		MeshRendererComponent() = default;
+		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh);
 
+		std::shared_ptr<Graphics::Mesh> Mesh;
+		// TODO: Materials
 	};
 
 	namespace Scripts
@@ -58,7 +64,7 @@ namespace Nova
 			if (existingScript)
 			{
 				TagComponent* tag = entity.TryGetComponent<TagComponent>();
-				NOVA_CORE_WARN("Entity {} already has {}", tag ? tag->Name : "(Missing Tag Component)", TScript::GetScriptName_s());
+				NOVA_CORE_ERROR("Entity {} already has {}", tag ? tag->Name : "(Missing Tag Component)", TScript::GetScriptName_s());
 				return *existingScript;
 			}
 

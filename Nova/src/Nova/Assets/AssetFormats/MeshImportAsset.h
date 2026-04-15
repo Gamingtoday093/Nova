@@ -3,7 +3,7 @@
 
 namespace Nova
 {
-	class MeshSourceAsset;
+	class ModelSourceAsset;
 }
 
 namespace Nova::Assets
@@ -30,7 +30,7 @@ namespace Nova
 	public:
 		ASSET_TYPE(MeshImportAsset, EAssetType::Mesh)
 
-		MeshImportAsset(const AssetID& assetID, const std::string& name, std::weak_ptr<MeshSourceAsset> meshSource);
+		MeshImportAsset(const AssetID& assetID, const std::string& name, std::weak_ptr<ModelSourceAsset> meshSource);
 
 		const MeshOptionalSettings& GetSettings() const;
 		void SetSettings(const MeshOptionalSettings& settings);
@@ -51,7 +51,7 @@ namespace Nova
 	private:
 		void ReloadFromSource();
 
-		std::weak_ptr<MeshSourceAsset> m_MeshSource;
+		std::weak_ptr<ModelSourceAsset> m_MeshSource;
 		MeshOptionalSettings m_Settings;
 
 		friend class Assets::MeshImporter;

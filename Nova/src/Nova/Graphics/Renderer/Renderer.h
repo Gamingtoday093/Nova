@@ -20,6 +20,7 @@
 namespace Nova::Graphics
 {
 	class CubeTexture;
+	class Transform;
 }
 
 namespace Nova::Graphics
@@ -31,6 +32,7 @@ namespace Nova::Graphics
 
 		void RenderCube(const Camera& camera);
 		void RenderShip(const Camera& camera);
+		void RenderModel(const Transform& transform, const Mesh& mesh, const Camera& camera);
 		void RenderSkybox(const CubeTexture& skyboxTexture, const Camera& camera);
 
 	private:

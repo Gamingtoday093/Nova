@@ -6,6 +6,11 @@ Nova::TagComponent::TagComponent(const std::string& name)
 	Name = name;
 }
 
+Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh)
+{
+	Mesh = std::move(mesh);
+}
+
 Nova::ScriptBase& Nova::Scripts::ScriptCollectionComponent::AddScript(Entity& entity, Scripts::ScriptID scriptID, ScriptBase* script)
 {
 	m_Scripts.push_back(script);

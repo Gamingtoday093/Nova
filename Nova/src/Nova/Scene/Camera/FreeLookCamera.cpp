@@ -17,7 +17,9 @@ Nova::FreeLookCamera::FreeLookCamera(XMFLOAT3 position, XMFLOAT2 yawPitch, float
 void Nova::FreeLookCamera::Update()
 {
 	bool flying = Input::KeyHeld(EMouseButton::RIGHT);
-	if (!Input::KeyHeld(EMouseButton::MIDDLE) && !flying) return;
+	bool drag = Input::KeyHeld(EMouseButton::MIDDLE);
+	short scroll = Input::GetScrollDelta();
+	if (!drag && !flying && scroll == 0) return;
 	XMFLOAT3 setDelta{};
 	if (flying)
 	{
@@ -46,18 +48,24 @@ void Nova::FreeLookCamera::Update()
 			setDelta.y += -1.f;
 		}
 	}
-	else
+	else if (drag)
 	{
 		POINT mouseDelta = Input::GetMouseDelta();
 		setDelta.x = -float(mouseDelta.x);
 		setDelta.y = float(mouseDelta.y);
+	}
+	else
+	{
+		if (scroll > 1) setDelta.z -= 1.f;
+		else setDelta.z += 1.f;
+
+		setDelta.z *= 50.f;
 	}
 	XMVECTOR moveDelta = XMLoadFloat3(&setDelta);
 	if (flying) moveDelta = XMVector3Normalize(moveDelta);
 	if (XMVector3LengthSq(moveDelta).m128_f32[0] > 0.5f)
 	{
 		moveDelta = XMVector3TransformCoord(moveDelta, XMMatrixRotationRollPitchYaw(m_YawPitch.y, m_YawPitch.x, 0));
-
 		moveDelta *= m_Speed * Time::GetDeltaTime();
 		if (flying && Input::KeyHeld(EKey::SHIFT))
 		{

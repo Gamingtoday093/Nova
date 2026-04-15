@@ -47,12 +47,12 @@ namespace Nova
 		bool operator==(const MeshImportSettings& other) const;
 	};
 
-	class MeshSourceAsset : public SourceAsset
+	class ModelSourceAsset : public SourceAsset
 	{
 	public:
-		ASSET_TYPE(MeshSourceAsset, EAssetType::MeshSource)
+		ASSET_TYPE(ModelSourceAsset, EAssetType::MeshSource)
 
-		MeshSourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
+		ModelSourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
 
 		const MeshImportSettings& GetSettings() const;
 		void SetSettings(const MeshImportSettings& settings);

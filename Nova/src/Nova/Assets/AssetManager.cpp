@@ -18,9 +18,9 @@ Nova::AssetManager::~AssetManager()
 }
 
 template<>
-std::shared_ptr<Nova::MeshSourceAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
+std::shared_ptr<Nova::ModelSourceAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
 {
-	return LoadFromPath<MeshSourceAsset, Assets::MeshImporter>(assetPath);
+	return LoadFromPath<ModelSourceAsset, Assets::MeshImporter>(assetPath);
 }
 
 template<>
