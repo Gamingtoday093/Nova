@@ -11,6 +11,12 @@ Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mes
 	Mesh = std::move(mesh);
 }
 
+Nova::Scripts::ScriptCollectionComponent::~ScriptCollectionComponent()
+{
+	for (auto* script : m_Scripts)
+		delete script;
+}
+
 Nova::ScriptBase& Nova::Scripts::ScriptCollectionComponent::AddScript(Entity& entity, Scripts::ScriptID scriptID, ScriptBase* script)
 {
 	m_Scripts.push_back(script);
@@ -29,7 +35,7 @@ bool Nova::Scripts::ScriptCollectionComponent::HasScript(Scripts::ScriptID scrip
 
 Nova::ScriptBase* Nova::Scripts::ScriptCollectionComponent::TryGetScript(Scripts::ScriptID scriptID) const
 {
-	for (auto& script : m_Scripts)
+	for (auto* script : m_Scripts)
 		if (script->m_ScriptID == scriptID) return script;
 
 	return nullptr;
@@ -55,7 +61,7 @@ bool Nova::Scripts::ScriptCollectionComponent::RemoveScript(Entity& entity, Scri
 
 void Nova::Scripts::ScriptCollectionComponent::Update()
 {
-	for (auto& script : m_Scripts)
+	for (auto* script : m_Scripts)
 	{
 		if (!script->m_IsEnabled) continue;
 

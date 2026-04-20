@@ -18,6 +18,8 @@ namespace Nova
 		size_t size() const { return m_Length; }
 		bool empty() const { return m_Length == 0; }
 
+		void clear();
+
 		T* begin() { return m_Ptr; }
 		T* end() { return m_Ptr + m_Length; }
 		const T* begin() const { return m_Ptr; }
@@ -40,21 +42,25 @@ namespace Nova
 	template<typename T>
 	dynamic_array<T>::~dynamic_array()
 	{
-		if (m_Ptr) delete[] m_Ptr;
+		clear();
 	}
 
 	template<typename T>
 	void dynamic_array<T>::operator=(const std::vector<T>& vector)
 	{
-		if (vector.empty())
-		{
-			if (m_Ptr) delete[] m_Ptr;
-			m_Ptr = nullptr;
-			m_Length = 0;
-			return;
-		}
+		clear();
+		if (vector.empty()) return;
+
 		m_Ptr = new T[vector.size()];
 		m_Length = vector.size();
 		memcpy_s(m_Ptr, m_Length, std::data(vector), vector.size());
+	}
+
+	template<typename T>
+	inline void dynamic_array<T>::clear()
+	{
+		if (m_Ptr) delete[] m_Ptr;
+		m_Ptr = nullptr;
+		m_Length = 0;
 	}
 }

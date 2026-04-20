@@ -8,8 +8,9 @@
 #include "Scene.h"
 #include "Nova/Graphics/Renderer/Renderer.h"
 #include "Nova/Assets/AssetFormats/ModelSourceAsset.h"
+#include "Nova/Tools/QuaternionExtensions.h"
 
-Nova::Scene::Scene() : m_FreeLookCamera({ 0, 1.5f, -3 }, { 0, 0 }, 8.f, 0.8f)
+Nova::Scene::Scene() : m_FreeLookCamera({ 25, 2.5f, -6.f }, { -1, 0 }, 10.f, 2.2f)
 {
 	Entity entity = CreateEntity("Cool Entity");
 	entity.AddComponent<TransformComponent>();
@@ -18,9 +19,9 @@ Nova::Scene::Scene() : m_FreeLookCamera({ 0, 1.5f, -3 }, { 0, 0 }, 8.f, 0.8f)
 	entity.AddComponent<MeshRendererComponent>(mesh);
 
 	Entity entity2 = CreateEntity("Cool Entity");
-	auto& transform = entity2.AddComponent<TransformComponent>();
-	transform.Transform.Position.x = 20.f;
-	transform.Transform.Scale = { 0.5f, 0.5f, 0.5f };
+	auto& transform2 = entity2.AddComponent<TransformComponent>();
+	transform2.Transform.Position.x = 20.f;
+	transform2.Transform.Scale = { 0.5f, 0.5f, 0.5f };
 	entity2.AddComponent<MeshRendererComponent>(mesh);
 }
 
@@ -38,7 +39,12 @@ void Nova::Scene::RenderEntities(Graphics::Renderer& renderer)
 	for (auto entity : group)
 	{
 		auto pair = group.get<TransformComponent, MeshRendererComponent>(entity);
-		renderer.RenderModel(std::get<0>(pair).Transform, *std::get<1>(pair).Mesh, GetCamera());
+		auto& transform = std::get<0>(pair).Transform;
+
+		XMVECTOR forward = XMVector3Normalize(XMLoadFloat3(&transform.Position) - XMLoadFloat3(&m_FreeLookCamera.m_Position));
+		transform.Rotation = XMQuaternionToEulerAngles(XMQuaternionLookRotation(forward));
+
+		renderer.RenderModel(transform, *std::get<1>(pair).Mesh, GetCamera());
 	}
 }
 

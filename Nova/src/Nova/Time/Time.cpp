@@ -22,7 +22,9 @@ void Nova::Time::BeginFrame()
 	m_LastFrameStart = std::chrono::high_resolution_clock::now();
 
 	constexpr float nanoToSec = 1.0f / float(std::nano::den);
-	m_DeltaTime = (m_LastFrameStart - lastFrameStart).count() * nanoToSec;
+	float newDeltaTime = (m_LastFrameStart - lastFrameStart).count() * nanoToSec;
+	m_DeltaTime = newDeltaTime;
+	//m_DeltaTime += (newDeltaTime - m_DeltaTime) * 0.2f;
 }
 
 float Nova::Time::GetDeltaTime()

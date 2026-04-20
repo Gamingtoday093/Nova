@@ -31,6 +31,8 @@ namespace Nova
 		class ScriptCollectionComponent
 		{
 		public:
+			~ScriptCollectionComponent();
+
 			template<ScriptType TScript>
 			TScript& AddScript(Entity& entity);
 

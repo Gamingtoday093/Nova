@@ -9,11 +9,9 @@ namespace Nova::Graphics
 	{
 	public:
 		XMFLOAT3 Position = { 0, 0, 0 };
-		XMFLOAT4 Rotation = { 0, 0, 0, 1 };
+		// Maybe also store as Quaternion?
+		XMFLOAT3 Rotation = { 0, 0, 0 };
 		XMFLOAT3 Scale = { 1, 1, 1 };
-
-		XMFLOAT3 GetEulerAngles() const;
-		void SetEulerAngles(const XMFLOAT3& rotation);
 
 		XMMATRIX CalculateMatrix() const;
 	};

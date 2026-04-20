@@ -51,15 +51,15 @@ void Nova::FreeLookCamera::Update()
 	else if (drag)
 	{
 		POINT mouseDelta = Input::GetMouseDelta();
-		setDelta.x = -float(mouseDelta.x);
-		setDelta.y = float(mouseDelta.y);
+		setDelta.x = -float(mouseDelta.x) * 10.f;
+		setDelta.y = float(mouseDelta.y) * 10.f;
 	}
 	else
 	{
 		if (scroll > 1) setDelta.z -= 1.f;
 		else setDelta.z += 1.f;
 
-		setDelta.z *= 50.f;
+		setDelta.z *= 1000.f;
 	}
 	XMVECTOR moveDelta = XMLoadFloat3(&setDelta);
 	if (flying) moveDelta = XMVector3Normalize(moveDelta);
