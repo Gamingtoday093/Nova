@@ -27,7 +27,7 @@ Nova::Scene::Scene() : m_FreeLookCamera({ 25, 2.5f, -6.f }, { -1, 0 }, 10.f, 2.2
 
 	auto shipTexture = AssetManager::GetAsset<Texture2DAsset>("Assets/Textures/ShipTextureB.png")->GetTexture();
 	auto shader = AssetManager::GetAsset<ShaderAsset>("Assets/CompiledShaders/PixelShader_ps.cso");
-	auto shipMaterial = AssetManager::CreateAsset<MaterialAsset>(AssetID::NewID(), "ShipMaterial")->CreateMaterial<Graphics::StandardMaterial>();
+	auto shipMaterial = AssetManager::CreateMaterialAsset<Graphics::StandardMaterial>("ShipMaterial")->GetMaterial<Graphics::StandardMaterial>();
 	shipMaterial->AlbedoTexture = shipTexture;
 
 	auto mesh = AssetManager::GetAsset<ModelSourceAsset>("Assets/Models/Ship.fbx")->GetMeshAssets().at(0)->GetMesh();

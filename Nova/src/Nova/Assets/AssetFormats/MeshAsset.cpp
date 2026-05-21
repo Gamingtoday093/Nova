@@ -22,7 +22,7 @@ void Nova::MeshAsset::SetSettings(const MeshOptionalSettings& settings)
 	if (needsReload) ReloadFromSource();
 }
 
-std::shared_ptr<Nova::Graphics::Mesh> Nova::MeshAsset::GetMesh()
+Nova::AssetRef<Nova::Graphics::Mesh> Nova::MeshAsset::GetMesh()
 {
 	if (m_Mesh) return m_Mesh;
 

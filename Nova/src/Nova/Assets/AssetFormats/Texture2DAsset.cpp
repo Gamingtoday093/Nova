@@ -23,7 +23,7 @@ void Nova::Texture2DAsset::SetSettings(const Texture2DImportSettings& settings)
 	if (needsReload) NOVA_CORE_WARN("Texture2DAsset needs Reload!");
 }
 
-std::shared_ptr<Nova::Graphics::Texture2D> Nova::Texture2DAsset::GetTexture() const
+Nova::AssetRef<Nova::Graphics::Texture2D> Nova::Texture2DAsset::GetTexture() const
 {
 	NOVA_ASSERT(m_Texture, "Invalid Texture2DAsset");
 	return m_Texture;

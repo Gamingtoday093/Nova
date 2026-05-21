@@ -15,7 +15,7 @@ namespace Nova
 {
 	struct Texture2DImportSettings
 	{
-		bool dummyOption = false;
+		bool GenerateMipmaps = false;
 
 		bool operator==(const Texture2DImportSettings& other) const;
 	};
@@ -31,12 +31,12 @@ namespace Nova
 		const Texture2DImportSettings& GetSettings() const;
 		void SetSettings(const Texture2DImportSettings& settings);
 
-		std::shared_ptr<Graphics::Texture2D> GetTexture() const;
+		AssetRef<Graphics::Texture2D> GetTexture() const;
 
 	private:
 		Texture2DImportSettings m_Settings;
 
-		std::shared_ptr<Graphics::Texture2D> m_Texture;
+		AssetRef<Graphics::Texture2D> m_Texture;
 
 		friend class Assets::TextureImporter;
 	};

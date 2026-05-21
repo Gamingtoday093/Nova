@@ -22,12 +22,12 @@ namespace Nova
 		Prefab
 	};
 
+	template<class T>
+	using AssetRef = std::shared_ptr<T>;
+
 	class Asset
 	{
 	public:
-		explicit Asset(const AssetID& assetID, const std::string& name);
-		virtual ~Asset() = default;
-
 		const AssetID& GetAssetID() const;
 		const std::string& GetName() const;
 
@@ -43,6 +43,9 @@ namespace Nova
 		inline static EAssetType GetAssetType_s() { return assetType; }
 
 	protected:
+		explicit Asset(const AssetID& assetID, const std::string& name);
+		virtual ~Asset() = default;
+		
 		virtual void DisposeAsset() { }
 
 	private:
@@ -55,14 +58,15 @@ namespace Nova
 	class SourceAsset : public Asset
 	{
 	public:
-		explicit SourceAsset(const AssetID& assetID, const std::string& name);
-		explicit SourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
-		virtual ~SourceAsset() override = default;
-
 		const std::filesystem::path& GetAssetPath() const;
 
 		inline static const char* GetAssetName_s() { return "BaseSourceAsset"; }
 		inline static EAssetType GetAssetType_s() { return EAssetType::None; }
+
+	protected:
+		explicit SourceAsset(const AssetID& assetID, const std::string& name);
+		explicit SourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
+		virtual ~SourceAsset() override = default;
 
 	private:
 		std::filesystem::path m_AssetPath;

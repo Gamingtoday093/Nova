@@ -1,5 +1,7 @@
 #pragma once
 #include "Asset.h"
+#include "Nova/Graphics/Resources/Material/Material.h"
+#include "AssetFormats/MaterialAsset.h"
 
 namespace Nova
 {
@@ -37,6 +39,9 @@ namespace Nova
 
 		template<AssetType TAsset, typename... Args>
 		static std::shared_ptr<TAsset> CreateAsset(const AssetID& assetID, const std::string& name, Args&&... args);
+
+		template<Graphics::MaterialType TMaterial, typename... Args>
+		static std::shared_ptr<MaterialAsset> CreateMaterialAsset(const std::string& name, Args&&... args);
 
 		static bool DestroyAsset(const AssetID& assetID);
 
@@ -88,5 +93,14 @@ namespace Nova
 		Get().m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
 		Get().m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
 		return asset;
+	}
+
+	template<Graphics::MaterialType TMaterial, typename... Args>
+	std::shared_ptr<MaterialAsset> AssetManager::CreateMaterialAsset(const std::string& name, Args&&... args)
+	{
+		auto materialAsset = CreateAsset<MaterialAsset>(AssetID::NewID(), name);
+		materialAsset->m_Material = std::make_shared<TMaterial>(std::forward<Args>(args)...);
+
+		return materialAsset;
 	}
 }

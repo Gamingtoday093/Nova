@@ -43,7 +43,7 @@ namespace Nova
 		/// <summary>
 		/// Create or Get the Mesh held by this MeshAsset. Returns nullptr if this Asset has been Disposed
 		/// </summary>
-		std::shared_ptr<Graphics::Mesh> GetMesh();
+		AssetRef<Graphics::Mesh> GetMesh();
 
 		/// <summary>
 		/// Release the Mesh held by this MeshAsset forcing ReloadFromSource() next GetMesh()
@@ -56,7 +56,7 @@ namespace Nova
 	private:
 		void ReloadFromSource();
 
-		std::shared_ptr<Graphics::Mesh> m_Mesh;
+		AssetRef<Graphics::Mesh> m_Mesh;
 
 		std::weak_ptr<ModelSourceAsset> m_MeshSource;
 		MeshOptionalSettings m_Settings;
