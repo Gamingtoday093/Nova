@@ -36,7 +36,7 @@ namespace Nova
 		Entity m_Entity;
 
 	private:
-		bool m_IsEnabled = false;
+		bool m_IsEnabled = true;
 		bool m_HasStarted = false;
 
 		Scripts::ScriptID m_ScriptID = {};

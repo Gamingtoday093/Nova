@@ -22,7 +22,7 @@ namespace Nova::Asserts
 
 #ifdef DEBUG
 #define NOVA_ASSERT(condition, ...)												\
-if (!condition)																	\
+if (!(condition))																	\
 {																				\
 	NOVA_CORE_ERROR(__VA_ARGS__);												\
 	if (IsDebuggerPresent())													\
@@ -39,5 +39,5 @@ if (!condition)																	\
 	}																			\
 }
 #else // Release
-#define NOVA_ASSERT(condition, ...) assert(condition && __VA_ARGS__)
+#define NOVA_ASSERT(condition, ...) assert((condition) && __VA_ARGS__)
 #endif

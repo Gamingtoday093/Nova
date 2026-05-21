@@ -1,3 +1,6 @@
+Texture2D AlbedoTexture : register(t0);
+sampler AlbedoSampler : register(s0);
+
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
@@ -7,5 +10,5 @@ struct PS_INPUT
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    return input.worldPosition;
+    return AlbedoTexture.Sample(AlbedoSampler, input.texcoord);
 }

@@ -10,5 +10,6 @@ namespace Nova
 
 		void Awake() override;
 		void Start() override;
+		void Update() override;
 	};
 }

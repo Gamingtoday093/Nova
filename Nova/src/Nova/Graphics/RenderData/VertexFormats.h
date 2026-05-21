@@ -7,14 +7,14 @@ namespace Nova::Graphics
 {
 	struct Vertex
 	{
-		Vertex(float x, float y, float z)
+		Vertex(float x, float y, float z, float u, float v)
 		{
 			Position = { x, y, z };
-			Color = { x, y, z };
+			TexCoord = { u, v };
 		}
 
 		XMFLOAT3 Position;
-		XMFLOAT3 Color;
+		XMFLOAT2 TexCoord;
 	};
 
 	struct SkyboxVertex

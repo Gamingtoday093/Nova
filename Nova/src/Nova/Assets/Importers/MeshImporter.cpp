@@ -6,11 +6,10 @@
 #include <Assimp/Importer.hpp>
 #include <Assimp/postprocess.h>
 #include <Assimp/scene.h>
-#include "Nova/Assets/AssetFormats/MeshImportAsset.h"
+#include "Nova/Assets/AssetFormats/MeshAsset.h"
 
 bool Nova::Assets::MeshImporter::Supported(const std::filesystem::path& assetPath)
 {
-	return true;
 	if (!assetPath.has_extension()) return false;
 
 	static std::initializer_list<std::string> supportedFileTypes = { ".fbx", ".obj" };
@@ -100,7 +99,7 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 {
 	if (node->mNumMeshes == 0) return;
 
-	std::shared_ptr<MeshImportAsset> importMesh;
+	std::shared_ptr<MeshAsset> importMesh;
 	for (auto& importMeshAsset : meshSource->GetMeshAssets())
 		if (node->mName.C_Str() == importMeshAsset->GetName())
 		{
@@ -136,7 +135,7 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 				texCoord0V = mesh->mTextureCoords[0][vertexIndex].y;
 			}
 
-			vertices.emplace_back(vertex.x, vertex.y, vertex.z);
+			vertices.emplace_back(vertex.x, vertex.y, vertex.z, texCoord0U, texCoord0V);
 		}
 
 		for (size_t faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++)
@@ -158,7 +157,7 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 
 	if (!importMesh)
 	{
-		importMesh = AssetManager::CreateAsset<MeshImportAsset>(AssetID::NewID(), node->mName.C_Str(), meshSource);
+		importMesh = AssetManager::CreateAsset<MeshAsset>(AssetID::NewID(), node->mName.C_Str(), meshSource);
 		meshSource->m_MeshAssets.push_back(importMesh);
 	}
 

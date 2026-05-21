@@ -18,7 +18,6 @@ namespace Nova
 	public:
 		ASSET_TYPE(SkyboxAsset, EAssetType::Skybox)
 
-		// Maybe some SourceAssets should be able to be created during runtime?
 		SkyboxAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
 		~SkyboxAsset();
 

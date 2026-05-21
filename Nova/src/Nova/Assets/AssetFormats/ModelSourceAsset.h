@@ -13,7 +13,7 @@ namespace Nova::Assets
 
 namespace Nova
 {
-	class MeshImportAsset;
+	class MeshAsset;
 }
 
 namespace Nova
@@ -50,7 +50,7 @@ namespace Nova
 	class ModelSourceAsset : public SourceAsset
 	{
 	public:
-		ASSET_TYPE(ModelSourceAsset, EAssetType::MeshSource)
+		ASSET_TYPE(ModelSourceAsset, EAssetType::ModelSource)
 
 		ModelSourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
 
@@ -60,12 +60,12 @@ namespace Nova
 		void ReloadFromSource();
 		void UnloadUnused(bool loadedAssets = false);
 
-		const std::vector<std::shared_ptr<MeshImportAsset>>& GetMeshAssets() const;
+		const std::vector<std::shared_ptr<MeshAsset>>& GetMeshAssets() const;
 
 	private:
 		MeshImportSettings m_Settings;
 
-		std::vector<std::shared_ptr<MeshImportAsset>> m_MeshAssets;
+		std::vector<std::shared_ptr<MeshAsset>> m_MeshAssets;
 		// TODO: m_Skeletons
 		// TODO: m_Animations
 

@@ -2,6 +2,7 @@
 #include "ScriptBase.h"
 #include "Nova/Graphics/Resources/Transform.h"
 #include "Nova/Graphics/Resources/Mesh.h"
+#include "Nova/Graphics/Resources/Material/Material.h"
 
 namespace Nova
 {
@@ -23,7 +24,8 @@ namespace Nova
 		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh);
 
 		std::shared_ptr<Graphics::Mesh> Mesh;
-		// TODO: Materials
+		// TODO: Support Multiple Materials
+		std::shared_ptr<Graphics::Material> Material;
 	};
 
 	namespace Scripts
@@ -31,7 +33,7 @@ namespace Nova
 		class ScriptCollectionComponent
 		{
 		public:
-			~ScriptCollectionComponent();
+			void Release();
 
 			template<ScriptType TScript>
 			TScript& AddScript(Entity& entity);

@@ -11,13 +11,14 @@ namespace Nova
 	enum class EAssetType
 	{
 		None,
-		MeshSource,
+		ModelSource,
 		Mesh,
 		Skeleton,
 		Animation,
 		Texture,
 		Skybox,
 		Material,
+		Shader,
 		Prefab
 	};
 
@@ -56,7 +57,7 @@ namespace Nova
 	public:
 		explicit SourceAsset(const AssetID& assetID, const std::string& name);
 		explicit SourceAsset(const AssetID& assetID, const std::filesystem::path& assetPath);
-		~SourceAsset() override = default;
+		virtual ~SourceAsset() override = default;
 
 		const std::filesystem::path& GetAssetPath() const;
 

@@ -1,5 +1,5 @@
 #include "novapch.h"
-#include "Nova/Assets/AssetFormats/MeshImportAsset.h"
+#include "Nova/Assets/AssetFormats/MeshAsset.h"
 #include "Nova/Assets/AssetFormats/ModelSourceAsset.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
@@ -8,6 +8,7 @@
 #include "Nova/Input/Input.h"
 #include "Nova/Tools/Stopwatch.h"
 #include "Nova/Graphics/Resources/Mesh.h"
+#include "Nova/Graphics/Resources/Material/Material.h"
 #include "Nova/Graphics/Resources/Transform.h"
 #include "Renderer.h"
 
@@ -26,14 +27,14 @@ Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
 
 	std::vector<Vertex> vertices;
 
-	vertices.push_back({ -side, -side, -side });
-	vertices.push_back({ side, -side, -side });
-	vertices.push_back({ -side, side, -side });
-	vertices.push_back({ side, side, -side });
-	vertices.push_back({ -side, -side, side });
-	vertices.push_back({ side, -side, side });
-	vertices.push_back({ -side, side, side });
-	vertices.push_back({ side, side, side });
+	vertices.push_back({ -side, -side, -side, 0, 0 });
+	vertices.push_back({ side, -side, -side, 0, 0 });
+	vertices.push_back({ -side, side, -side, 0, 0 });
+	vertices.push_back({ side, side, -side, 0, 0 });
+	vertices.push_back({ -side, -side, side, 0, 0 });
+	vertices.push_back({ side, -side, side, 0, 0 });
+	vertices.push_back({ -side, side, side, 0, 0 });
+	vertices.push_back({ side, side, side, 0, 0 });
 
 	m_VertexBuffer.Create(vertices);
 
@@ -109,16 +110,17 @@ void Nova::Graphics::Renderer::RenderShip(const Camera& camera)
 	m_ShipMesh->DrawIndexed();
 }
 
-void Nova::Graphics::Renderer::RenderModel(const Transform& transform, const Mesh& mesh, const Camera& camera)
+void Nova::Graphics::Renderer::RenderModel(const Transform& transform, const Mesh& mesh, const Material* material, const Camera& camera)
 {
 	m_VertexShader.Bind();
-	m_PixelShader.Bind();
 
 	m_InputLayout.Bind();
 	m_DepthStencilState.Bind();
 	m_Rasterizer.Bind();
 
 	mesh.Bind();
+	if (material) material->Bind();
+	else m_PixelShader.Bind();
 
 	m_TransformBuffer.Data.ProjectionViewMatrix =
 		camera.GetViewMatrix() *

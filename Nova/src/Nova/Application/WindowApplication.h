@@ -26,6 +26,7 @@ namespace Nova
 
 		void Run() override;
 
+	protected:
 		virtual void OnStart() { }
 		virtual void OnUpdate() { }
 		virtual void OnShutdown() { }

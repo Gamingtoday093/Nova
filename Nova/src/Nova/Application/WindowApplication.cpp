@@ -61,6 +61,7 @@ void Nova::WindowApplication::Run()
 		// ----------
 
 		RenderFrame();
+		m_Scene->Update();
 		m_Scene->m_FreeLookCamera.Update();
 		OnUpdate();
 

@@ -1,7 +1,9 @@
 #include "novapch.h"
 #include "AssetManager.h"
 #include "Importers/MeshImporter.h"
+#include "Importers/TextureImporter.h"
 #include "Importers/SkyboxImporter.h"
+#include "Importers/ShaderImporter.h"
 
 
 Nova::AssetManager* Nova::AssetManager::m_Instance;
@@ -24,9 +26,21 @@ std::shared_ptr<Nova::ModelSourceAsset> Nova::AssetManager::GetAsset(const std::
 }
 
 template<>
+std::shared_ptr<Nova::Texture2DAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
+{
+	return LoadFromPath<Texture2DAsset, Assets::TextureImporter>(assetPath);
+}
+
+template<>
 std::shared_ptr<Nova::SkyboxAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
 {
 	return LoadFromPath<SkyboxAsset, Assets::SkyboxImporter>(assetPath);
+}
+
+template<>
+std::shared_ptr<Nova::ShaderAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
+{
+	return LoadFromPath<ShaderAsset, Assets::ShaderImporter>(assetPath);
 }
 
 template<Nova::SourceAssetType TAsset, class Importer>
@@ -68,7 +82,7 @@ bool Nova::AssetManager::DestroyAsset(const AssetID& assetID)
 	asset->DisposeAsset();
 	Get().m_AssetRegistry.erase(assetID);
 	Get().m_NameToAssetID.erase(asset->GetName());
-	if (asset->GetAssetType() == EAssetType::MeshSource) // TODO: Replace with some other way of figuring out if this is a SourceAsset
+	if (asset->GetAssetType() == EAssetType::ModelSource) // TODO: Replace with some other way of figuring out if this is a SourceAsset
 	{
 		auto sourceAsset = std::static_pointer_cast<SourceAsset>(asset);
 		Get().m_PathToAssetID.erase(sourceAsset->GetAssetPath());

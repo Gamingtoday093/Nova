@@ -8,5 +8,6 @@ Nova::SkyboxAsset::~SkyboxAsset() = default;
 
 const Nova::Graphics::CubeTexture& Nova::SkyboxAsset::GetSkyboxTexture() const
 {
+	NOVA_ASSERT(m_SkyboxTexure, "Invalid SkyboxAsset");
 	return *m_SkyboxTexure;
 }

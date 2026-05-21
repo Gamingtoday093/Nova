@@ -20,12 +20,15 @@ namespace Nova
 
 		Entity CreateEntity(const std::string& name);
 
+		void Update();
 		void RenderEntities(Graphics::Renderer& renderer);
 
 		const Camera& GetCamera() const;
 		FreeLookCamera m_FreeLookCamera;
 
 	private:
+		//static void ReleaseScriptCollection(entt::registry& registry, entt::entity entity);
+
 		entt::registry m_Registry;
 
 		friend class Entity;

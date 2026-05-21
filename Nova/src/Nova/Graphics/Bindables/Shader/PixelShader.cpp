@@ -4,10 +4,20 @@
 #include "Nova/Graphics/Logging/HRAsserts.h"
 #include <d3dcompiler.h>
 
+Nova::Graphics::PixelShader::PixelShader(const std::filesystem::path& shaderPath)
+{
+	Create(shaderPath.wstring().c_str());
+}
+
 void Nova::Graphics::PixelShader::Create(const std::string& shaderName)
 {
+	Create(ToWString("Assets/CompiledShaders/" + shaderName + ".cso").c_str());
+}
+
+void Nova::Graphics::PixelShader::Create(LPCWSTR shaderPath)
+{
 	ComPtr<ID3DBlob> pixelShader;
-	NOVA_HRASSERT(D3DReadFileToBlob(ToWString("Assets/CompiledShaders/" + shaderName + ".cso").c_str(), &pixelShader), "Failed to Read Pixel Shader");
+	NOVA_HRASSERT(D3DReadFileToBlob(shaderPath, &pixelShader), "Failed to Read Pixel Shader");
 
 	NOVA_HRASSERT(DX11::GetDevice()->CreatePixelShader(
 		pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(),

@@ -1,6 +1,6 @@
 #include "novapch.h"
 #include "ModelSourceAsset.h"
-#include "MeshImportAsset.h"
+#include "MeshAsset.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Assets/Importers/MeshImporter.h"
 
@@ -37,7 +37,7 @@ void Nova::ModelSourceAsset::UnloadUnused(bool loadedAssets)
 	}
 }
 
-const std::vector<std::shared_ptr<Nova::MeshImportAsset>>& Nova::ModelSourceAsset::GetMeshAssets() const
+const std::vector<std::shared_ptr<Nova::MeshAsset>>& Nova::ModelSourceAsset::GetMeshAssets() const
 {
 	return m_MeshAssets;
 }

@@ -4,7 +4,9 @@
 namespace Nova
 {
 	class ModelSourceAsset;
+	class Texture2DAsset;
 	class SkyboxAsset;
+	class ShaderAsset;
 }
 
 namespace Nova
@@ -22,7 +24,13 @@ namespace Nova
 		static std::shared_ptr<ModelSourceAsset> GetAsset<ModelSourceAsset>(const std::filesystem::path& assetPath);
 
 		template<>
+		static std::shared_ptr<Texture2DAsset> GetAsset<Texture2DAsset>(const std::filesystem::path& assetPath);
+
+		template<>
 		static std::shared_ptr<SkyboxAsset> GetAsset<SkyboxAsset>(const std::filesystem::path& assetPath);
+
+		template<>
+		static std::shared_ptr<ShaderAsset> GetAsset<ShaderAsset>(const std::filesystem::path& assetPath);
 
 		template<AssetType TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const AssetID& assetID);
