@@ -34,14 +34,13 @@ Nova::Scene::Scene() : m_FreeLookCamera({ 25, 2.5f, -6.f }, { -1, 0 }, 10.f, 2.2
 
 	Entity entity = CreateEntity("Cool Entity");
 	entity.AddComponent<TransformComponent>();
-	entity.AddComponent<MeshRendererComponent>(mesh);
+	entity.AddComponent<MeshRendererComponent>(mesh, shipMaterial);
 
 	Entity entity2 = CreateEntity("Cool Entity");
 	auto& transform2 = entity2.AddComponent<TransformComponent>();
 	transform2.Transform.Position.x = 20.f;
 	transform2.Transform.Scale = { 0.5f, 0.5f, 0.5f };
-	MeshRendererComponent& meshRenderer = entity2.AddComponent<MeshRendererComponent>(mesh);
-	meshRenderer.Material = shipMaterial;
+	entity2.AddComponent<MeshRendererComponent>(mesh, shipMaterial);
 	//entity2.AddComponent<TestScript>();
 }
 

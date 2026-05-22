@@ -11,6 +11,12 @@ Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mes
 	Mesh = std::move(mesh);
 }
 
+Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh, std::shared_ptr<Graphics::Material> material)
+{
+	Mesh = std::move(mesh);
+	Material = std::move(material);
+}
+
 void Nova::Scripts::ScriptCollectionComponent::Release()
 {
 	for (auto* script : m_Scripts)

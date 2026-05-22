@@ -22,7 +22,10 @@ namespace Nova
 	{
 		MeshRendererComponent() = default;
 		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh);
+		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh, std::shared_ptr<Graphics::Material> material);
 
+		// Should probably store reference to Assets in some way
+		// Using std::variant<Mesh, MeshAsset> was a little too slow imo. How often do you need to asset? Maybe the ID is enough? Even if it's 16 bytes
 		std::shared_ptr<Graphics::Mesh> Mesh;
 		// TODO: Support Multiple Materials
 		std::shared_ptr<Graphics::Material> Material;
