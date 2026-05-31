@@ -7,6 +7,7 @@
 #include "Nova/Scene/Scene.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Assets/AssetFormats/SkyboxAsset.h"
+#include "Nova/ImGui/ImGuiManager.h"
 
 Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startupInfo) : IApplication(startupInfo)
 {
@@ -30,6 +31,8 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 	m_Renderer = std::make_unique<Graphics::Renderer>(*m_Framework);
 
 	m_Scene = std::make_unique<Scene>();
+
+	m_ImGuiManager = std::make_unique<ImGuiManager>(m_Window->GetHWND());
 }
 
 Nova::WindowApplication::~WindowApplication() = default;
@@ -79,19 +82,26 @@ void Nova::WindowApplication::RenderFrame()
 
 	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
 	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->GetCamera());
+
+	m_ImGuiManager->RenderLayers();
 }
 
 void Nova::WindowApplication::BeginFrame()
 {
 	m_Time->BeginFrame();
 	m_Input->BeginFrame();
+	
 	if (m_IsMinimized) return;
+	
 	static constexpr float clearColor[4] = { 0.16f, 0.16f, 0.16f, 0.16f };
 	m_Framework->BeginFrame(clearColor);
+	m_ImGuiManager->BeginFrame();
 }
 
 void Nova::WindowApplication::EndFrame()
 {
 	if (m_IsMinimized) return;
+	
+	m_ImGuiManager->EndFrame();
 	m_Framework->EndFrame();
 }

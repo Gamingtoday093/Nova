@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "../../../resources/Icon/resource.h"
 #include "Nova/Input/Input.h"
+#include "Nova/ImGui/ImGuiManager.h"
 
 Nova::Window::Window(const WindowStartupInfo& startupInfo) : m_HInstance(GetModuleHandle(nullptr))
 {
@@ -92,6 +93,7 @@ void Nova::Window::CreateWindowClass(LPCWSTR className)
 
 LRESULT Nova::Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (Nova::ImGuiManager::ImGuiInputWindowProc(hwnd, uMsg, wParam, lParam)) return 0;
 	Nova::Input::UpdateStatesWindowProc(uMsg, wParam, lParam);
 
 	Nova::Window* window = reinterpret_cast<Nova::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));

@@ -9,9 +9,7 @@ bool Nova::ScriptBase::GetEnabled() const
 void Nova::ScriptBase::SetEnabled(bool newEnabled)
 {
 	bool isNewEnabled = m_IsEnabled != newEnabled;
-
 	m_IsEnabled = newEnabled;
-	m_HasStarted = m_HasStarted && m_IsEnabled;
 
 	if (isNewEnabled)
 	{

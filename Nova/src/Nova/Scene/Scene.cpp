@@ -12,7 +12,6 @@
 #include "Nova/Assets/AssetFormats/MaterialAsset.h"
 #include "Nova/Graphics/Resources/Material/MaterialFormats/StandardMaterial.h"
 #include "Nova/Assets/AssetFormats/ShaderAsset.h"
-#include "Nova/Tools/QuaternionExtensions.h"
 
 static void ReleaseScriptCollection(entt::registry& registry, entt::entity entity)
 {
@@ -34,7 +33,7 @@ Nova::Scene::Scene() : m_FreeLookCamera({ 25, 2.5f, -6.f }, { -1, 0 }, 10.f, 2.2
 
 	Entity entity = CreateEntity("Cool Entity");
 	entity.AddComponent<TransformComponent>();
-	entity.AddComponent<MeshRendererComponent>(mesh, shipMaterial);
+	entity.AddComponent<MeshRendererComponent>(mesh, std::make_shared<Graphics::Material>(shader->GetShader()));
 
 	Entity entity2 = CreateEntity("Cool Entity");
 	auto& transform2 = entity2.AddComponent<TransformComponent>();

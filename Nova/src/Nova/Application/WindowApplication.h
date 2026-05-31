@@ -14,6 +14,7 @@ namespace Nova
 	class Input;
 	class AssetManager;
 	class Scene;
+	class ImGuiManager;
 }
 
 namespace Nova
@@ -46,5 +47,6 @@ namespace Nova
 		std::unique_ptr<Graphics::Renderer> m_Renderer;
 		std::unique_ptr<AssetManager> m_AssetManager;
 		std::unique_ptr<Scene> m_Scene;
+		std::unique_ptr<ImGuiManager> m_ImGuiManager;
 	};
 }

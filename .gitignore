@@ -6,6 +6,9 @@
 # Compiled Shaders
 *.cso
 
+# ImGui
+imgui.ini
+
 # Visual Studio Generated Files
 *.sln
 *.vcxproj

@@ -22,7 +22,7 @@ namespace Nova::Asserts
 
 #ifdef DEBUG
 #define NOVA_ASSERT(condition, ...)												\
-if (!(condition))																	\
+if (!(condition)) [[unlikely]]													\
 {																				\
 	NOVA_CORE_ERROR(__VA_ARGS__);												\
 	if (IsDebuggerPresent())													\

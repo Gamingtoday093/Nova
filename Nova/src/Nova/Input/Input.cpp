@@ -1,5 +1,6 @@
 #include "novapch.h"
 #include "Input.h"
+#include <ImGui/ImGui.h>
 
 Nova::Input* Nova::Input::m_Instance;
 
@@ -81,7 +82,8 @@ bool Nova::Input::UpdateStatesWindowProc(UINT message, WPARAM wParam, LPARAM lPa
 
 bool Nova::Input::ShouldProcessInput()
 {
-	return true;
+	auto& io = ImGui::GetIO();
+	return !io.WantCaptureMouse && !io.WantTextInput;
 }
 
 bool Nova::Input::KeyDown(EKey key)
