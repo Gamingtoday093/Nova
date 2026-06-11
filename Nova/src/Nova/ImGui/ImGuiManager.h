@@ -18,8 +18,8 @@ namespace Nova
 		void RenderLayers();
 		void EndFrame() const;
 
-		static const IImGuiLayer* PushLayer(std::unique_ptr<IImGuiLayer> layer);
-		static bool PopLayer(const IImGuiLayer* layer);
+		static const IImGuiLayer* AddLayer(std::unique_ptr<IImGuiLayer> layer);
+		static bool RemoveLayer(const IImGuiLayer* layer);
 
 	private:
 		static ImGuiManager& Get();

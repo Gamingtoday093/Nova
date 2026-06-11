@@ -17,6 +17,7 @@ namespace Nova
 		static bool UpdateStatesWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 		static bool ShouldProcessInput();
+		static void OverrideProcessInputThisFrame();
 
 		static bool KeyDown(EKey key);
 		static bool KeyUp(EKey key);
@@ -53,6 +54,8 @@ namespace Nova
 		short m_PendingScrollDelta = 0;
 		short m_CurrentScrollDelta = 0;
 		short m_PreviousScrollDelta = 0;
+
+		bool m_OverrideProcessInputsThisFrame = false;
 
 		static Input* m_Instance;
 	};

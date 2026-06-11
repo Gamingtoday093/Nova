@@ -29,6 +29,9 @@ void Nova::Input::BeginFrame()
 	m_PreviousScrollDelta = m_CurrentScrollDelta;
 	m_CurrentScrollDelta = m_PendingScrollDelta;
 	m_PendingScrollDelta = 0;
+
+	// Override ProcessInput
+	m_OverrideProcessInputsThisFrame = false;
 }
 
 bool Nova::Input::UpdateStatesWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -82,8 +85,15 @@ bool Nova::Input::UpdateStatesWindowProc(UINT message, WPARAM wParam, LPARAM lPa
 
 bool Nova::Input::ShouldProcessInput()
 {
+	if (Get().m_OverrideProcessInputsThisFrame) return true;
+
 	auto& io = ImGui::GetIO();
 	return !io.WantCaptureMouse && !io.WantTextInput;
+}
+
+void Nova::Input::OverrideProcessInputThisFrame()
+{
+	Get().m_OverrideProcessInputsThisFrame = true;
 }
 
 bool Nova::Input::KeyDown(EKey key)

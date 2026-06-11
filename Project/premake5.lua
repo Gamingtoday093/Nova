@@ -159,6 +159,7 @@ project "Game"
         "%{prj.location}/src",
 		"%{wks.location}/Nova/src",
 		"%{wks.location}/Nova/vendor",
+		"%{wks.location}/vendor",
 		"%{wks.location}/vendor/external/RVO2/src"
 	}
 	

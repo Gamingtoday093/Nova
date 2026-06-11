@@ -74,18 +74,6 @@ void Nova::WindowApplication::Run()
 	OnShutdown();
 }
 
-void Nova::WindowApplication::RenderFrame()
-{
-	//m_Renderer->RenderCube(m_Scene->m_FreeLookCamera);
-	//m_Renderer->RenderShip(m_Scene->GetCamera());
-	m_Scene->RenderEntities(*m_Renderer);
-
-	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
-	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->GetCamera());
-
-	m_ImGuiManager->RenderLayers();
-}
-
 void Nova::WindowApplication::BeginFrame()
 {
 	m_Time->BeginFrame();
@@ -94,8 +82,18 @@ void Nova::WindowApplication::BeginFrame()
 	if (m_IsMinimized) return;
 	
 	static constexpr float clearColor[4] = { 0.16f, 0.16f, 0.16f, 0.16f };
-	m_Framework->BeginFrame(clearColor);
 	m_ImGuiManager->BeginFrame();
+	m_Framework->BeginFrame(clearColor);
+}
+
+void Nova::WindowApplication::RenderFrame()
+{
+	m_Scene->RenderEntities(*m_Renderer);
+
+	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
+	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->GetCamera());
+
+	m_ImGuiManager->RenderLayers();
 }
 
 void Nova::WindowApplication::EndFrame()

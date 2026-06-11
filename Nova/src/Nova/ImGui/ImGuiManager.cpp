@@ -41,6 +41,9 @@ void Nova::ImGuiManager::BeginFrame() const
 
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
+
+	for (auto& layer : m_Layers)
+		layer->BeginFrame();
 }
 
 bool Nova::ImGuiManager::ImGuiInputWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -51,9 +54,7 @@ bool Nova::ImGuiManager::ImGuiInputWindowProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 void Nova::ImGuiManager::RenderLayers()
 {
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-	
-	ImGui::ShowDemoWindow();
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_None); // ImGuiDockNodeFlags_PassthruCentralNode
 
 	for (auto& layer : m_Layers)
 		layer->Render();
@@ -61,6 +62,9 @@ void Nova::ImGuiManager::RenderLayers()
 
 void Nova::ImGuiManager::EndFrame() const
 {
+	for (auto& layer : m_Layers)
+		layer->EndFrame();
+
 	ImGui::Render();
 	
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -72,20 +76,17 @@ void Nova::ImGuiManager::EndFrame() const
 	}
 }
 
-const Nova::IImGuiLayer* Nova::ImGuiManager::PushLayer(std::unique_ptr<IImGuiLayer> layer)
+const Nova::IImGuiLayer* Nova::ImGuiManager::AddLayer(std::unique_ptr<IImGuiLayer> layer)
 {
-	IImGuiLayer* attachedLayer = Get().m_Layers.emplace_back(std::move(layer)).get();
-	attachedLayer->OnAttach();
-	return attachedLayer;
+	return Get().m_Layers.emplace_back(std::move(layer)).get();
 }
 
-bool Nova::ImGuiManager::PopLayer(const IImGuiLayer* layer)
+bool Nova::ImGuiManager::RemoveLayer(const IImGuiLayer* layer)
 {
 	auto& layers = Get().m_Layers;
 	for (int32_t i = int32_t(layers.size()) - 1; i >= 0; i--)
 	{
 		if (layers[i].get() != layer) continue;
-		layers[i].get()->OnDetach();
 		layers.erase(layers.begin() + i);
 		return true;
 	}

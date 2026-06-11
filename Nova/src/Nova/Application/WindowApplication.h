@@ -35,8 +35,8 @@ namespace Nova
 	private:
 		void OnWindowEvent(WindowEvent& windowEvent);
 
-		void RenderFrame();
 		void BeginFrame();
+		void RenderFrame();
 		void EndFrame();
 
 		bool m_IsMinimized;

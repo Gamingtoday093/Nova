@@ -1,6 +1,7 @@
 #include "novapch.h"
 #include "DX11.h"
 #include "Logging/HRAsserts.h"
+#include "Bindables/Texture/RenderTexture.h"
 
 Nova::Graphics::DX11* Nova::Graphics::DX11::m_Instance;
 
@@ -11,6 +12,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 	
 	m_Width = contextParameters.Width;
 	m_Height = contextParameters.Height;
+	m_RenderTexture = nullptr;
 
 	UINT deviceFlags = 0;
 #ifdef DEBUG
@@ -44,7 +46,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 	ComPtr<IDXGIDevice> dxgiDevice;
 	ComPtr<IDXGIAdapter> dxgiAdapter;
 	ComPtr<IDXGIFactory2> dxgiFactory;
-
+	
 	NOVA_HRASSERT(m_Device.As(&dxgiDevice), "Failed to get as IDXGIDevice");
 	NOVA_HRASSERT(dxgiDevice->GetAdapter(&dxgiAdapter), "Failed to get IDXGIAdapter");
 	NOVA_HRASSERT(dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)), "Failed to get IDXGIFactory2");
@@ -65,7 +67,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
 		.Flags = 0
 	};
-
+	
 	NOVA_HRASSERT(dxgiFactory->CreateSwapChainForHwnd(
 		m_Device.Get(),
 		contextParameters.HWND,
@@ -74,9 +76,9 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 		nullptr,
 		&m_SwapChain), "Failed to create SwapChain");
 
-	CreateRenderTargetViews();
+	CreateBackBufferView();
 	CreateDepthStencilView();
-	UpdateViewport();
+	if (!m_RenderTexture) UpdateViewport(m_Width, m_Height);
 }
 
 Nova::Graphics::DX11::~DX11()
@@ -93,23 +95,38 @@ void Nova::Graphics::DX11::Resize(uint32_t width, uint32_t height)
 	m_Context->Flush();
 
 	// Release buffers
-	m_SceneView = nullptr;
+	m_BackBufferView = nullptr;
 	m_DepthStencilView = nullptr;
 
 	NOVA_HRASSERT(m_SwapChain->ResizeBuffers(0, m_Width, m_Height, DXGI_FORMAT_UNKNOWN, 0), "Resize Buffers");
 	
 	if (m_Width == 0 || m_Height == 0) return;
 
-	CreateRenderTargetViews();
+	CreateBackBufferView();
 	CreateDepthStencilView();
-	UpdateViewport();
+	if (!m_RenderTexture) UpdateViewport(m_Width, m_Height);
+}
+
+void Nova::Graphics::DX11::SetRenderTexture(const RenderTexture* renderTexture)
+{
+	if (renderTexture && (renderTexture->GetWidth() == 0 || renderTexture->GetHeight() == 0)) return;
+
+	if (Get().m_RenderTexture && renderTexture == nullptr)
+		m_Instance->m_Context->OMSetRenderTargets(1, m_Instance->m_BackBufferView.GetAddressOf(), m_Instance->m_DepthStencilView.Get());
+
+	m_Instance->m_RenderTexture = renderTexture;
+	if (m_Instance->m_RenderTexture)
+		m_Instance->UpdateViewport(m_Instance->m_RenderTexture->GetWidth(), m_Instance->m_RenderTexture->GetHeight());
 }
 
 void Nova::Graphics::DX11::BeginFrame(const float clearColor[4])
 {
-	m_Context->OMSetRenderTargets(1, m_SceneView.GetAddressOf(), m_DepthStencilView.Get());
+	if (m_RenderTexture)
+		m_RenderTexture->Bind(clearColor);
+	else
+		m_Context->OMSetRenderTargets(1, m_BackBufferView.GetAddressOf(), m_DepthStencilView.Get());
 
-	m_Context->ClearRenderTargetView(m_SceneView.Get(), clearColor);
+	m_Context->ClearRenderTargetView(m_BackBufferView.Get(), clearColor);
 	m_Context->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -121,15 +138,26 @@ void Nova::Graphics::DX11::EndFrame()
 
 float Nova::Graphics::DX11::GetAspectRatio() const
 {
+	if (m_RenderTexture) return m_RenderTexture->GetAspectRatio();
 	return float(m_Width) / float(m_Height);
 }
 
-void Nova::Graphics::DX11::CreateRenderTargetViews()
+uint32_t Nova::Graphics::DX11::GetWidth()
+{
+	return Get().m_Width;
+}
+
+uint32_t Nova::Graphics::DX11::GetHeight()
+{
+	return Get().m_Height;
+}
+
+void Nova::Graphics::DX11::CreateBackBufferView()
 {
 	ComPtr<ID3D11Texture2D> backBuffer;
 	NOVA_HRASSERT(m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)), "Get BackBuffer");
-
-	D3D11_RENDER_TARGET_VIEW_DESC sceneDesc
+	
+	D3D11_RENDER_TARGET_VIEW_DESC backBufferDesc
 	{
 		.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
 		.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D,
@@ -138,7 +166,7 @@ void Nova::Graphics::DX11::CreateRenderTargetViews()
 			.MipSlice = 0
 		}
 	};
-	NOVA_HRASSERT(m_Device->CreateRenderTargetView(backBuffer.Get(), &sceneDesc, &m_SceneView), "Create SceneView");
+	NOVA_HRASSERT(m_Device->CreateRenderTargetView(backBuffer.Get(), &backBufferDesc, &m_BackBufferView), "Create SceneView");
 }
 
 void Nova::Graphics::DX11::CreateDepthStencilView()
@@ -173,14 +201,14 @@ void Nova::Graphics::DX11::CreateDepthStencilView()
 	NOVA_HRASSERT(m_Device->CreateDepthStencilView(depthStencilTexture.Get(), &depthViewDesc, &m_DepthStencilView), "Create DepthStencilView");
 }
 
-void Nova::Graphics::DX11::UpdateViewport()
+void Nova::Graphics::DX11::UpdateViewport(uint32_t width, uint32_t height)
 {
 	D3D11_VIEWPORT viewport
 	{
 		.TopLeftX = 0.f,
 		.TopLeftY = 0.f,
-		.Width = float(m_Width),
-		.Height = float(m_Height),
+		.Width = float(width),
+		.Height = float(height),
 		.MinDepth = 0.f,
 		.MaxDepth = 1.f
 	};

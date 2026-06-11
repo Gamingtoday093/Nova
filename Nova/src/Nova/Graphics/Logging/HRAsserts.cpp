@@ -12,11 +12,13 @@ bool Nova::Graphics::HRAsserts::WriteErrors(HRESULT hr)
 
 	NOVA_CORE_ERROR(_com_error(hr).ErrorMessage());
 
+	// Project Game needs to link to DXGIDebug or something?
+	
 	//ComPtr<IDXGIInfoQueue> infoQueue;
 	//if (FAILED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(infoQueue.GetAddressOf()))))
 	//{
 	//	NOVA_CORE_ERROR("Failed to get Debug IDXGIInfoQueue");
-	//	return;
+	//	return true;
 	//}
 	//
 	//UINT64 messagesCount = infoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Log.h"
+#include "Nova/Tools/WStringExtensions.h"
 
 #ifdef _MSC_VER
 #define NOVA_DEBUGBREAK() __debugbreak()

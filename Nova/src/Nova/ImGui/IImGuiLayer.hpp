@@ -7,8 +7,8 @@ namespace Nova
 	public:
 		virtual ~IImGuiLayer() = default;
 
+		virtual void BeginFrame() { };
 		virtual void Render() = 0;
-		virtual void OnAttach() { };
-		virtual void OnDetach() { };
+		virtual void EndFrame() { };
 	};
 }
