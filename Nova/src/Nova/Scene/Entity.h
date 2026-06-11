@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Component/ScriptID.h"
+#include "Nova/Logging/Asserts.h"
 
 namespace Nova
 {

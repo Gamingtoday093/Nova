@@ -1,8 +1,14 @@
 #include "pch.h"
 #include "SceneTab.h"
-#include <ImGui/ImGui.h>
 #include <Nova/Graphics/DX11.h>
 #include <Nova/Input/Input.h>
+#include "EditorContext.h"
+
+SceneTab::SceneTab(EditorContext& context) : m_Context(context)
+{
+	m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+	m_GizmoSpace = ImGuizmo::MODE::WORLD;
+}
 
 SceneTab::~SceneTab()
 {

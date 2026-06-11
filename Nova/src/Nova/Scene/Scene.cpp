@@ -51,6 +51,18 @@ Nova::Entity Nova::Scene::CreateEntity(const std::string& name)
 	return entity;
 }
 
+std::vector<Nova::Entity> Nova::Scene::GetAllEntities()
+{
+	auto view = m_Registry.view<entt::entity>();
+	std::vector<Entity> entities;
+	entities.reserve(view.size_hint());
+
+	for (auto entity : view)
+		entities.emplace_back(entity, this);
+
+	return entities;
+}
+
 void Nova::Scene::Update()
 {
 	auto scripts = m_Registry.group<Scripts::ScriptCollectionComponent>();

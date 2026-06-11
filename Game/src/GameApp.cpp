@@ -2,7 +2,12 @@
 #include <Nova/EntryPoint.h>
 #include <Nova/Application/WindowApplication.h>
 #include <Nova/ImGui/ImGuiManager.h>
+#include "ImGuiLayers/EditorContext.h"
 #include "ImGuiLayers/SceneTab.h"
+#include "ImGuiLayers/AssetsTab.h"
+#include "ImGuiLayers/HierarchyTab.h"
+#include "ImGuiLayers/InspectorTab.h"
+#include "ImGuiLayers/ConsoleTab.h"
 
 class GameApp : public Nova::WindowApplication
 {
@@ -11,7 +16,13 @@ public:
 
 	void OnStart() override
 	{
-		Nova::ImGuiManager::AddLayer(std::make_unique<SceneTab>());
+		m_Context.Scene = m_Scene.get();
+
+		Nova::ImGuiManager::AddLayer(std::make_unique<SceneTab>(m_Context));
+		Nova::ImGuiManager::AddLayer(std::make_unique<AssetsTab>());
+		Nova::ImGuiManager::AddLayer(std::make_unique<HierarchyTab>(m_Context));
+		Nova::ImGuiManager::AddLayer(std::make_unique<InspectorTab>(m_Context));
+		Nova::ImGuiManager::AddLayer(std::make_unique<ConsoleTab>());
 	}
 
 	void OnUpdate() override
@@ -23,6 +34,9 @@ public:
 	{
 
 	}
+
+private:
+	EditorContext m_Context;
 };
 
 Nova::IApplication* Nova::CreateApplication()

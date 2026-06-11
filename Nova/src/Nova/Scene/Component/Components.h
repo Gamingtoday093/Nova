@@ -1,8 +1,12 @@
 #pragma once
 #include "ScriptBase.h"
 #include "Nova/Graphics/Resources/Transform.h"
-#include "Nova/Graphics/Resources/Mesh.h"
-#include "Nova/Graphics/Resources/Material/Material.h"
+
+namespace Nova::Graphics
+{
+	class Mesh;
+	class Material;
+}
 
 namespace Nova
 {

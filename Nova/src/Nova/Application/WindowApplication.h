@@ -32,6 +32,8 @@ namespace Nova
 		virtual void OnUpdate() { }
 		virtual void OnShutdown() { }
 
+		std::unique_ptr<Scene> m_Scene;
+
 	private:
 		void OnWindowEvent(WindowEvent& windowEvent);
 
@@ -46,7 +48,6 @@ namespace Nova
 		std::unique_ptr<Graphics::DX11> m_Framework;
 		std::unique_ptr<Graphics::Renderer> m_Renderer;
 		std::unique_ptr<AssetManager> m_AssetManager;
-		std::unique_ptr<Scene> m_Scene;
 		std::unique_ptr<ImGuiManager> m_ImGuiManager;
 	};
 }

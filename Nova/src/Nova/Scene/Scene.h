@@ -1,4 +1,5 @@
 #pragma once
+#include <EnTT/entt.hpp>
 #include "Camera/FreeLookCamera.h"
 
 namespace Nova
@@ -19,6 +20,7 @@ namespace Nova
 		Scene();
 
 		Entity CreateEntity(const std::string& name);
+		std::vector<Entity> GetAllEntities();
 
 		void Update();
 		void RenderEntities(Graphics::Renderer& renderer);
@@ -27,8 +29,6 @@ namespace Nova
 		FreeLookCamera m_FreeLookCamera;
 
 	private:
-		//static void ReleaseScriptCollection(entt::registry& registry, entt::entity entity);
-
 		entt::registry m_Registry;
 
 		friend class Entity;

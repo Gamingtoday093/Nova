@@ -1,5 +1,7 @@
 #include "novapch.h"
 #include "Components.h"
+#include "Nova/Graphics/Resources/Mesh.h"
+#include "Nova/Graphics/Resources/Material/Material.h"
 
 Nova::TagComponent::TagComponent(const std::string& name)
 {
