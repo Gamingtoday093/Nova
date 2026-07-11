@@ -19,8 +19,8 @@ namespace Nova::Graphics
 		bool XM_CALLCONV InsideBounds(XMVECTOR position) const;
 		bool XM_CALLCONV RayBounds(XMVECTOR position, XMVECTOR direction) const;
 
-		void SetMinMax(XMFLOAT3 min, XMFLOAT3 max);
-		void ExpandTo(XMFLOAT3 position);
+		void XM_CALLCONV SetMinMax(XMVECTOR min, XMVECTOR max);
+		void XM_CALLCONV ExpandTo(XMVECTOR position);
 		void MergeWith(const Bounds& other);
 	};
 }

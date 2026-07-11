@@ -152,8 +152,8 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 		if (!optionalSettings.MergeSubMeshes)
 			subMeshes.emplace_back(indexOffset, uint32_t(indices.size()) - indexOffset, vertexOffset, mesh->mMaterialIndex);
 
-		bounds.ExpandTo(std::bit_cast<DirectX::XMFLOAT3>(mesh->mAABB.mMin));
-		bounds.ExpandTo(std::bit_cast<DirectX::XMFLOAT3>(mesh->mAABB.mMax));
+		bounds.ExpandTo(DirectX::XMVectorSet(mesh->mAABB.mMin.x, mesh->mAABB.mMin.y, mesh->mAABB.mMin.z, 0.f));
+		bounds.ExpandTo(DirectX::XMVectorSet(mesh->mAABB.mMax.x, mesh->mAABB.mMax.y, mesh->mAABB.mMax.z, 0.f));
 
 		if (mesh->HasBones() && meshSource->GetSettings().Skeletons.ImportSkeletons)
 		{

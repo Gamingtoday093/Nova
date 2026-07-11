@@ -62,49 +62,33 @@ bool XM_CALLCONV Nova::Graphics::Bounds::RayBounds(XMVECTOR origin, XMVECTOR dir
 	return DirectX::XMVectorGetX(tNear) <= DirectX::XMVectorGetX(tFar);
 }
 
-void Nova::Graphics::Bounds::SetMinMax(XMFLOAT3 min, XMFLOAT3 max)
+void XM_CALLCONV Nova::Graphics::Bounds::SetMinMax(XMVECTOR min, XMVECTOR max)
 {
-	XMVECTOR minVec = DirectX::XMLoadFloat3(&min);
-	XMVECTOR maxVec = DirectX::XMLoadFloat3(&max);
-
-	XMVECTOR halfDistance = (maxVec - minVec) * 0.5f;
-	DirectX::XMStoreFloat3(&Center, minVec + halfDistance);
+	XMVECTOR halfDistance = (max - min) * 0.5f;
+	DirectX::XMStoreFloat3(&Center, min + halfDistance);
 	DirectX::XMStoreFloat3(&Extents, DirectX::XMVectorAbs(halfDistance));
 }
 
-void Nova::Graphics::Bounds::ExpandTo(XMFLOAT3 position)
+void XM_CALLCONV Nova::Graphics::Bounds::ExpandTo(XMVECTOR position)
 {
 	XMVECTOR center = DirectX::XMLoadFloat3(&Center);
 	XMVECTOR extents = DirectX::XMLoadFloat3(&Extents);
+	XMVECTOR min = center - extents;
+	XMVECTOR max = center + extents;
 
-	XMFLOAT3 min;
-	XMFLOAT3 max;
-	DirectX::XMStoreFloat3(&min, center - extents);
-	DirectX::XMStoreFloat3(&max, center + extents);
-
-	if (position.x < min.x)
-		min.x = position.x;
-
-	if (position.y < min.y)
-		min.y = position.y;
-
-	if (position.z < min.z)
-		min.z = position.z;
-
-	if (position.x > max.x)
-		max.x = position.x;
-
-	if (position.y > max.y)
-		max.y = position.y;
-
-	if (position.z > max.z)
-		max.z = position.z;
+	min = DirectX::XMVectorMin(min, position);
+	max = DirectX::XMVectorMax(max, position);
 
 	SetMinMax(min, max);
 }
 
 void Nova::Graphics::Bounds::MergeWith(const Bounds& other)
 {
-	ExpandTo(other.GetMin());
-	ExpandTo(other.GetMax());
+	XMVECTOR center = DirectX::XMLoadFloat3(&other.Center);
+	XMVECTOR extents = DirectX::XMLoadFloat3(&other.Extents);
+	XMVECTOR min = center - extents;
+	XMVECTOR max = center + extents;
+
+	ExpandTo(min);
+	ExpandTo(max);
 }

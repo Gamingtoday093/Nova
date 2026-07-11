@@ -61,5 +61,5 @@ void Nova::Graphics::Mesh::Apply(bool readWriteable)
 
 	m_Bounds = {};
 	for (auto& vertex : m_MeshData->Vertices)
-		m_Bounds.ExpandTo(vertex.Position);
+		m_Bounds.ExpandTo(DirectX::XMLoadFloat3(&vertex.Position));
 }
