@@ -4,11 +4,11 @@
 DirectX::XMFLOAT3 XM_CALLCONV DirectX::XMQuaternionToEulerAngles(XMVECTOR rotation)
 {
     XMFLOAT4X4 matrix;
-    XMStoreFloat4x4(&matrix, XMMatrixRotationQuaternion(rotation));
+    XMStoreFloat4x4(&matrix, XMMatrixRotationQuaternion(XMQuaternionNormalize(rotation)));
     
     XMFLOAT3 eulerAngles;
-    eulerAngles.x = asinf(-matrix._32);
-    if (cosf(eulerAngles.x) > 16.f * FLT_EPSILON)
+    eulerAngles.x = asinf(std::clamp(-matrix._32, -1.f, 1.f));
+    if (fabsf(cosf(eulerAngles.x)) > 16.f * FLT_EPSILON)
     {
         eulerAngles.y = atan2f(matrix._31, matrix._33);
         eulerAngles.z = atan2f(matrix._12, matrix._22);

@@ -88,6 +88,8 @@ void Nova::WindowApplication::BeginFrame()
 
 void Nova::WindowApplication::RenderFrame()
 {
+	if (m_IsMinimized) return;
+
 	m_Scene->RenderEntities(*m_Renderer);
 
 	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");

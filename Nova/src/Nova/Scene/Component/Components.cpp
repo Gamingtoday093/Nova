@@ -69,6 +69,26 @@ bool Nova::Scripts::ScriptCollectionComponent::RemoveScript(Entity& entity, Scri
 	return false;
 }
 
+std::vector<Nova::ScriptBase*>::iterator Nova::Scripts::ScriptCollectionComponent::begin()
+{
+	return m_Scripts.begin();
+}
+
+std::vector<Nova::ScriptBase*>::const_iterator Nova::Scripts::ScriptCollectionComponent::begin() const
+{
+	return m_Scripts.begin();
+}
+
+std::vector<Nova::ScriptBase*>::iterator Nova::Scripts::ScriptCollectionComponent::end()
+{
+	return m_Scripts.end();
+}
+
+std::vector<Nova::ScriptBase*>::const_iterator Nova::Scripts::ScriptCollectionComponent::end() const
+{
+	return m_Scripts.end();
+}
+
 void Nova::Scripts::ScriptCollectionComponent::Update()
 {
 	for (auto* script : m_Scripts)

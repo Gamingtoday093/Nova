@@ -112,7 +112,10 @@ void Nova::Graphics::DX11::SetRenderTexture(const RenderTexture* renderTexture)
 	if (renderTexture && (renderTexture->GetWidth() == 0 || renderTexture->GetHeight() == 0)) return;
 
 	if (Get().m_RenderTexture && renderTexture == nullptr)
+	{
 		m_Instance->m_Context->OMSetRenderTargets(1, m_Instance->m_BackBufferView.GetAddressOf(), m_Instance->m_DepthStencilView.Get());
+		m_Instance->UpdateViewport(m_Instance->m_Width, m_Instance->m_Height);
+	}
 
 	m_Instance->m_RenderTexture = renderTexture;
 	if (m_Instance->m_RenderTexture)

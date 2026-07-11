@@ -56,7 +56,7 @@ std::vector<Nova::Entity> Nova::Scene::GetAllEntities()
 	auto view = m_Registry.view<entt::entity>();
 	std::vector<Entity> entities;
 	entities.reserve(view.size_hint());
-
+	
 	for (auto entity : view)
 		entities.emplace_back(entity, this);
 
@@ -79,6 +79,7 @@ void Nova::Scene::RenderEntities(Graphics::Renderer& renderer)
 	for (auto entity : renderers)
 	{
 		auto pair = renderers.get<TransformComponent, MeshRendererComponent>(entity);
+		if (!std::get<1>(pair).Mesh) continue;
 		renderer.RenderModel(std::get<0>(pair).Transform, *std::get<1>(pair).Mesh, std::get<1>(pair).Material.get(), GetCamera());
 	}
 }

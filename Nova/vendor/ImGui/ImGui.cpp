@@ -1,7 +1,7 @@
 #include "novapch.h"
 #include "ImGui.h"
 
-void ImGui::SeparatorTextCheckbox(const char* label, const char* checkboxId, bool* v)
+bool ImGui::SeparatorTextCheckbox(const char* label, const char* checkboxId, bool* v)
 {
 	ImGui::SeparatorText(label);
 	auto& vtxBuffer = ImGui::GetWindowDrawList()->VtxBuffer;
@@ -15,5 +15,16 @@ void ImGui::SeparatorTextCheckbox(const char* label, const char* checkboxId, boo
 		break;
 	}
 	ImGui::SameLine(ImGui::GetWindowWidth() - 30);
-	ImGui::Checkbox(checkboxId, v);
+	return ImGui::Checkbox(checkboxId, v);
+}
+
+void ImGui::TextColoredBg(const ImVec4& col, const ImVec4& bg, const char* text)
+{
+	ImVec2 pos = ImGui::GetCursorScreenPos();
+	ImVec2 textSize = ImGui::CalcTextSize(text);
+
+	ImGui::GetWindowDrawList()->AddRectFilled(pos, ImVec2(pos.x + textSize.x, pos.y + textSize.y), ImGui::GetColorU32(bg));
+	ImGui::SetCursorScreenPos(pos);
+
+	ImGui::TextColored(col, text);
 }

@@ -27,7 +27,9 @@ public:
 
 	void OnUpdate() override
 	{
-		
+		//NOVA_INFO("HELLO");
+		//NOVA_WARN("HELLO!!");
+		//NOVA_ERROR("NOO");
 	}
 
 	void OnShutdown() override

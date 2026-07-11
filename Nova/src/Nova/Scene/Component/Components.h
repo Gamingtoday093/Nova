@@ -44,25 +44,26 @@ namespace Nova
 
 			template<ScriptType TScript>
 			TScript& AddScript(Entity& entity);
-
 			ScriptBase& AddScript(Entity& entity, Scripts::ScriptID scriptID, ScriptBase* script);
 
 			template<ScriptType TScript>
 			bool HasScript() const;
-
 			bool HasScript(Scripts::ScriptID scriptID) const;
 
 			template<ScriptType TScript>
 			TScript* TryGetScript() const;
-
 			ScriptBase* TryGetScript(Scripts::ScriptID scriptID) const;
 
 			template<ScriptType TScript>
 			bool RemoveScript(Entity& entity);
-
 			bool RemoveScript(Entity& entity, Scripts::ScriptID scriptID);
 
 			void Update();
+
+			std::vector<ScriptBase*>::iterator begin();
+			std::vector<ScriptBase*>::const_iterator begin() const;
+			std::vector<ScriptBase*>::iterator end();
+			std::vector<ScriptBase*>::const_iterator end() const;
 
 		private:
 			std::vector<ScriptBase*> m_Scripts;

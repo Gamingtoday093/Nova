@@ -8,11 +8,18 @@ namespace Nova
 	{
 	public:
 		static void Initialize(const std::string& clientName);
+		
 		static spdlog::logger& GetCoreLogger();
 		static spdlog::logger& GetClientLogger();
+
+		static std::vector<spdlog::details::log_msg_buffer> GetLogMessages();
+
 	private:
 		static std::unique_ptr<spdlog::logger> s_CoreLogger;
 		static std::unique_ptr<spdlog::logger> s_ClientLogger;
+
+		static constexpr size_t LOG_MAX_MESSAGES = 64;
+		static spdlog::sink_ptr s_LogBuffer;
 	};
 }
 

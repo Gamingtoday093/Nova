@@ -19,6 +19,7 @@ Nova::ImGuiManager::ImGuiManager(HWND hwnd)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Multi-Viewport / Platform Windows
+	io.Fonts->AddFontDefault();
 
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(Graphics::DX11::GetDevice(), Graphics::DX11::GetContext());

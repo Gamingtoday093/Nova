@@ -15,7 +15,7 @@ void HierarchyTab::Render()
 		auto* tagComponent = entity.TryGetComponent<Nova::TagComponent>();
 
 		std::string tag = tagComponent ? tagComponent->Name : "[Missing Tag]";
-		tag += "##" + std::to_string(static_cast<uint32_t>(entity.GetEntityHandle()));
+		tag += "##" + std::to_string(static_cast<uint32_t>(entity.GetEntityHandle())); // ImGui needs each Selectable to have a completely Unique Label
 
 		if (ImGui::Selectable(tag.c_str(), m_Context.SelectedEntity == entity))
 		{
