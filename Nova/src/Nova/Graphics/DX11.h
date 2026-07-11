@@ -46,6 +46,9 @@ namespace Nova::Graphics
 		void EndFrame();
 
 		float GetAspectRatio() const;
+		// TODO: Used by Camera to convert between ScreenToWorld. Not sure if I want to expose this property? this way
+		// Maybe it's fine since it doesn't have any side effects
+		static float GetAspectRatio_s();
 		static uint32_t GetWidth();
 		static uint32_t GetHeight();
 

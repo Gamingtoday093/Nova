@@ -19,6 +19,23 @@ Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mes
 	Material = std::move(material);
 }
 
+Nova::Graphics::Bounds Nova::MeshRendererComponent::GetBounds(const Graphics::Transform& transform) const
+{
+	if (!Mesh) return Graphics::Bounds();
+
+	Graphics::Bounds bounds = Mesh->GetBounds();
+	XMVECTOR center = DirectX::XMLoadFloat3(&bounds.Center);
+	XMVECTOR extents = DirectX::XMLoadFloat3(&bounds.Extents);
+
+	XMMATRIX matrix = transform.CalculateMatrix();
+	center = DirectX::XMVector3Transform(center, matrix);
+	extents = DirectX::XMVector3TransformNormal(extents, matrix);
+
+	DirectX::XMStoreFloat3(&bounds.Center, center);
+	DirectX::XMStoreFloat3(&bounds.Extents, extents);
+	return bounds;
+}
+
 void Nova::Scripts::ScriptCollectionComponent::Release()
 {
 	for (auto* script : m_Scripts)

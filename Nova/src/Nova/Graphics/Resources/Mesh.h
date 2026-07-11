@@ -3,7 +3,7 @@
 #include "Nova/Graphics/Bindables/Mesh/VertexBuffer.h"
 #include "Nova/Graphics/Bindables/Mesh/IndexBuffer.h"
 #include "Nova/Tools/dynamic_array.hpp"
-#include <span>
+#include "Bounds.h"
 
 namespace Nova::Graphics
 {
@@ -21,9 +21,9 @@ namespace Nova::Graphics
 
 	struct MeshData
 	{
-		MeshData() = default;
+		MeshData() noexcept = default;
 		template<VertexFormat TVertex>
-		MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes);
+		MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes) noexcept;
 
 		std::vector<Vertex> Vertices;
 		std::vector<uint16_t> Indices;
@@ -31,7 +31,7 @@ namespace Nova::Graphics
 	};
 
 	template<VertexFormat TVertex>
-	MeshData::MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes) :
+	MeshData::MeshData(std::vector<TVertex>&& vertices, std::vector<uint16_t>&& indices, std::vector<SubMesh>&& subMeshes) noexcept :
 		Vertices(vertices), Indices(indices), SubMeshes(subMeshes)
 	{ 
 	
@@ -41,10 +41,12 @@ namespace Nova::Graphics
 	{
 	public:
 		Mesh();
-		Mesh(const MeshData& meshData, bool readWriteable = false);
+		Mesh(const MeshData& meshData, const Bounds& bounds, bool readWriteable = false);
 
 		void Bind() const;
 		void DrawIndexed() const;
+
+		const Bounds& GetBounds() const;
 
 		bool ReadWriteable() const;
 		MeshData* GetReadWriteData() const;
@@ -55,7 +57,7 @@ namespace Nova::Graphics
 		IndexBuffer m_IndexBuffer;
 		dynamic_array<SubMesh> m_SubMeshes;
 
-		// TODO: m_Bounds
+		Bounds m_Bounds;
 		std::unique_ptr<MeshData> m_MeshData;
 	};
 }

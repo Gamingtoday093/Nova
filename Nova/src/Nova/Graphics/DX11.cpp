@@ -145,6 +145,11 @@ float Nova::Graphics::DX11::GetAspectRatio() const
 	return float(m_Width) / float(m_Height);
 }
 
+float Nova::Graphics::DX11::GetAspectRatio_s()
+{
+	return Get().GetAspectRatio();
+}
+
 uint32_t Nova::Graphics::DX11::GetWidth()
 {
 	return Get().m_Width;

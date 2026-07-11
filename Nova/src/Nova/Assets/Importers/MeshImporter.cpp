@@ -28,6 +28,7 @@ std::shared_ptr<Nova::ModelSourceAsset> Nova::Assets::MeshImporter::LoadFromPath
 	int importFlags = 
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
+		aiProcess_GenBoundingBoxes |
 		aiProcess_CalcTangentSpace |
 		aiProcess_ConvertToLeftHanded;
 
@@ -63,6 +64,7 @@ void Nova::Assets::MeshImporter::ReloadFromPath(std::shared_ptr<ModelSourceAsset
 	int importFlags =
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
+		aiProcess_GenBoundingBoxes |
 		aiProcess_CalcTangentSpace |
 		aiProcess_ConvertToLeftHanded;
 
@@ -112,11 +114,12 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 	std::vector<Graphics::Vertex> vertices;
 	std::vector<uint16_t> indices;
 	std::vector<Graphics::SubMesh> subMeshes;
+	Graphics::Bounds bounds;
 
 	for (size_t meshIndex = 0; meshIndex < node->mNumMeshes; meshIndex++)
 	{
 		auto mesh = scene->mMeshes[node->mMeshes[meshIndex]];
-
+		
 		uint32_t vertexOffset = uint32_t(vertices.size());
 		uint32_t indexOffset = uint32_t(indices.size());
 
@@ -149,6 +152,9 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 		if (!optionalSettings.MergeSubMeshes)
 			subMeshes.emplace_back(indexOffset, uint32_t(indices.size()) - indexOffset, vertexOffset, mesh->mMaterialIndex);
 
+		bounds.ExpandTo(std::bit_cast<DirectX::XMFLOAT3>(mesh->mAABB.mMin));
+		bounds.ExpandTo(std::bit_cast<DirectX::XMFLOAT3>(mesh->mAABB.mMax));
+
 		if (mesh->HasBones() && meshSource->GetSettings().Skeletons.ImportSkeletons)
 		{
 
@@ -165,6 +171,6 @@ void Nova::Assets::MeshImporter::LoadFromNode(const aiScene* scene, aiNode* node
 	auto meshData = Graphics::MeshData(std::move(vertices), std::move(indices), std::move(subMeshes));
 
 	bool readWriteable = optionalSettings.ReadWriteable.value_or(meshSource->GetSettings().Meshes.ReadWriteable);
-	if (importMesh->m_Mesh) *importMesh->m_Mesh = Graphics::Mesh(meshData, readWriteable);
-	else importMesh->m_Mesh = std::make_shared<Graphics::Mesh>(meshData, readWriteable);
+	if (importMesh->m_Mesh) *importMesh->m_Mesh = Graphics::Mesh(meshData, bounds, readWriteable);
+	else importMesh->m_Mesh = std::make_shared<Graphics::Mesh>(meshData, bounds, readWriteable);
 }

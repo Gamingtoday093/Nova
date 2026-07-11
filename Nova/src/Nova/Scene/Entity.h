@@ -8,6 +8,8 @@ namespace Nova
 	class Entity
 	{
 	public:
+		static Entity Invalid;
+
 		Entity() = default;
 		Entity(entt::entity handle, Scene* scene);
 
@@ -65,6 +67,8 @@ namespace Nova
 		entt::entity m_Handle = entt::null;
 		Scene* m_Scene = nullptr;
 	};
+
+	inline Entity Entity::Invalid{};
 
 	template<ScriptType TScript>
 	TScript& Entity::AddComponent()

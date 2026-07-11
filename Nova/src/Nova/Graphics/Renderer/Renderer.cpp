@@ -12,7 +12,7 @@
 #include "Nova/Graphics/Resources/Transform.h"
 #include "Renderer.h"
 
-Nova::Graphics::Renderer::Renderer(DX11& framework) : m_Framework(framework),
+Nova::Graphics::Renderer::Renderer(const DX11& framework) : m_Framework(framework),
 	m_TransformBuffer(EBindType::VertexShader), m_AnimationBuffer(EBindType::VertexShader, 256)
 {
 	DX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

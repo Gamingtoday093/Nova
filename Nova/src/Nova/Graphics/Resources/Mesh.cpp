@@ -7,10 +7,11 @@ Nova::Graphics::Mesh::Mesh()
 	m_MeshData = std::make_unique<MeshData>();
 }
 
-Nova::Graphics::Mesh::Mesh(const MeshData& meshData, bool readWriteable) :
+Nova::Graphics::Mesh::Mesh(const MeshData& meshData, const Bounds& bounds, bool readWriteable) :
 	m_VertexBuffer(meshData.Vertices),
 	m_IndexBuffer(meshData.Indices),
-	m_SubMeshes(meshData.SubMeshes)
+	m_SubMeshes(meshData.SubMeshes),
+	m_Bounds(bounds)
 {
 	if (readWriteable) m_MeshData = std::make_unique<MeshData>(meshData);
 }
@@ -35,6 +36,11 @@ void Nova::Graphics::Mesh::DrawIndexed() const
 	}
 }
 
+const Nova::Graphics::Bounds& Nova::Graphics::Mesh::GetBounds() const
+{
+	return m_Bounds;
+}
+
 bool Nova::Graphics::Mesh::ReadWriteable() const
 {
 	return m_MeshData != nullptr;
@@ -49,7 +55,11 @@ void Nova::Graphics::Mesh::Apply(bool readWriteable)
 {
 	NOVA_ASSERT(ReadWriteable(), "Mesh isn't ReadWriteable!");
 
+	// TODO: Recreate VertexBuffer & IndexBuffer
+
 	m_SubMeshes = m_MeshData->SubMeshes;
 
-	// TODO
+	m_Bounds = {};
+	for (auto& vertex : m_MeshData->Vertices)
+		m_Bounds.ExpandTo(vertex.Position);
 }

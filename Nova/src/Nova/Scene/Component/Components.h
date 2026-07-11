@@ -1,6 +1,7 @@
 #pragma once
 #include "ScriptBase.h"
 #include "Nova/Graphics/Resources/Transform.h"
+#include "Nova/Graphics/Resources/Bounds.h"
 
 namespace Nova::Graphics
 {
@@ -27,6 +28,8 @@ namespace Nova
 		MeshRendererComponent() = default;
 		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh);
 		MeshRendererComponent(std::shared_ptr<Graphics::Mesh> mesh, std::shared_ptr<Graphics::Material> material);
+
+		Graphics::Bounds GetBounds(const Graphics::Transform& transform) const;
 
 		// Should probably store reference to Assets in some way
 		// Using std::variant<Mesh, MeshAsset> was a little too slow imo. How often do you need to asset? Maybe the ID is enough? Even if it's 16 bytes

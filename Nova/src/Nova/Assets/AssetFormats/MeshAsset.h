@@ -25,6 +25,9 @@ namespace Nova
 		/// Merges all SubMeshes into a Single Mesh. SubMeshes allows for Multiple Materials per Mesh
 		/// </summary>
 		bool MergeSubMeshes = false;
+		/// <summary>
+		/// Allows for CPU Read and Write to the Mesh after Importing
+		/// </summary>
 		std::optional<bool> ReadWriteable;
 
 		bool operator==(const MeshOptionalSettings& other) const;

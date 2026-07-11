@@ -37,7 +37,7 @@ void SceneTab::Render()
 	m_Width = textureSize.x <= 0 ? 0 : uint32_t(textureSize.x);
 	m_Height = textureSize.y <= 0 ? 0 : uint32_t(textureSize.y);
 
-	ImGui::Image(reinterpret_cast<ImTextureID>(m_RenderTexture.GetTexture()), textureSize);
+	ImGui::Image(static_cast<ImTextureID>(m_RenderTexture.GetTexture()), textureSize);
 
 	if (m_Context.Scene && m_Context.SelectedEntity)
 		if (auto* transformComponent = m_Context.SelectedEntity.TryGetComponent<Nova::TransformComponent>())
@@ -100,6 +100,37 @@ void SceneTab::Render()
 					m_GizmoSpace = ImGuizmo::MODE::LOCAL;
 				else
 					m_GizmoSpace = ImGuizmo::MODE::WORLD;
+			}
+			else if (m_Context.Scene && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				ImVec2 mousePos = ImGui::GetMousePos();
+				ImVec2 windowPos = ImGui::GetWindowPos();
+				ImVec2 windowSize = ImGui::GetWindowSize();
+
+				// Relative position inside of the ImGui Window Viewport where (0, 0) is Top Left and (1, 1) is Bottom Right
+				XMVECTOR insideViewportPos =
+					XMVectorSet(
+						(mousePos.x - windowPos.x) / windowSize.x,
+						(mousePos.y - windowPos.y - ImGui::GetFrameHeight()) / windowSize.y,
+						0, 0);
+
+				XMVECTOR origin = m_Context.Scene->GetCamera().ScreenToWorld(insideViewportPos);
+				XMVECTOR direction = DirectX::XMVector3Normalize(origin - DirectX::XMLoadFloat3(&m_Context.Scene->m_FreeLookCamera.m_Position));
+
+				m_Context.SelectedEntity = Nova::Entity::Invalid;
+				for (Nova::Entity& entity : m_Context.Scene->GetAllEntities())
+				{
+					auto* transformComponent = entity.TryGetComponent<Nova::TransformComponent>();
+					if (!transformComponent) continue;
+					auto* meshRendererComponent = entity.TryGetComponent<Nova::MeshRendererComponent>();
+					if (!meshRendererComponent) continue;
+
+					if (meshRendererComponent->GetBounds(transformComponent->Transform).RayBounds(origin, direction))
+					{
+						m_Context.SelectedEntity = entity;
+						break;
+					}
+				}
 			}
 			else
 				// This *works* but not for Multi-Viewports but thats more of an issue with Nova::Input

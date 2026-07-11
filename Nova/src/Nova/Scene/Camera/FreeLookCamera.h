@@ -1,5 +1,5 @@
 #pragma once
-#include "Camera.hpp"
+#include "Camera.h"
 
 using namespace DirectX;
 

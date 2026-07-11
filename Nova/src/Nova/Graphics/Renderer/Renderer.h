@@ -13,7 +13,7 @@
 #include "Nova/Graphics/Bindables/Shader/Sampler.h"
 #include "Nova/Graphics/Bindables/Shader/PixelShader.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
-#include "Nova/Scene/Camera/Camera.hpp"
+#include "Nova/Scene/Camera/Camera.h"
 #include "Nova/Graphics/Resources/Mesh.h"
 #include "Nova/Graphics/Resources/SkyboxCube.h"
 
@@ -29,7 +29,7 @@ namespace Nova::Graphics
 	class Renderer
 	{
 	public:
-		Renderer(DX11& framework);
+		Renderer(const DX11& framework);
 
 		void RenderCube(const Camera& camera);
 		void RenderShip(const Camera& camera);
@@ -37,7 +37,7 @@ namespace Nova::Graphics
 		void RenderSkybox(const CubeTexture& skyboxTexture, const Camera& camera);
 
 	private:
-		DX11& m_Framework;
+		const DX11& m_Framework;
 
 		SkyboxCube m_SkyboxMesh;
 		InputLayout m_SkyboxLayout;
