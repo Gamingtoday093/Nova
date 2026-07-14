@@ -19,6 +19,18 @@ Nova::AssetManager::~AssetManager()
 	m_Instance = nullptr;
 }
 
+const std::filesystem::path& Nova::AssetManager::GetAssetsPath()
+{
+	static std::filesystem::path assetsPath = "Assets";
+	return assetsPath;
+}
+
+const std::filesystem::path& Nova::AssetManager::GetAssetsFullPath()
+{
+	static std::filesystem::path assetsFullPath = std::filesystem::current_path() / GetAssetsPath();
+	return assetsFullPath;
+}
+
 template<>
 std::shared_ptr<Nova::ModelSourceAsset> Nova::AssetManager::GetAsset(const std::filesystem::path& assetPath)
 {
@@ -46,8 +58,9 @@ std::shared_ptr<Nova::ShaderAsset> Nova::AssetManager::GetAsset(const std::files
 template<Nova::SourceAssetType TAsset, class Importer>
 std::shared_ptr<TAsset> Nova::AssetManager::LoadFromPath(const std::filesystem::path& assetPath)
 {
-	auto existingID = Get().m_PathToAssetID.find(assetPath);
-	if (existingID != Get().m_PathToAssetID.end()) return GetAsset<TAsset>(existingID->second);
+	AssetManager& assetManager = AssetManager::Get();
+	auto existingID = assetManager.m_PathToAssetID.find(assetPath);
+	if (existingID != assetManager.m_PathToAssetID.end()) return GetAsset<TAsset>(existingID->second);
 
 	if (!std::filesystem::exists(assetPath))
 	{
@@ -68,9 +81,9 @@ std::shared_ptr<TAsset> Nova::AssetManager::LoadFromPath(const std::filesystem::
 		return nullptr;
 	}
 
-	Get().m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
-	Get().m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
-	Get().m_PathToAssetID.insert_or_assign(assetPath, asset->GetAssetID());
+	assetManager.m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
+	assetManager.m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
+	assetManager.m_PathToAssetID.insert_or_assign(assetPath, asset->GetAssetID());
 	return asset;
 }
 
@@ -80,12 +93,19 @@ bool Nova::AssetManager::DestroyAsset(const AssetID& assetID)
 	if (!asset) return false;
 
 	asset->DisposeAsset();
-	Get().m_AssetRegistry.erase(assetID);
-	Get().m_NameToAssetID.erase(asset->GetName());
+	AssetManager& assetManager = AssetManager::Get();
+	assetManager.m_AssetRegistry.erase(assetID);
+	assetManager.m_NameToAssetID.erase(asset->GetName());
 	if (asset->GetAssetType() == EAssetType::ModelSource) // TODO: Replace with some other way of figuring out if this is a SourceAsset
 	{
 		auto sourceAsset = std::static_pointer_cast<SourceAsset>(asset);
-		Get().m_PathToAssetID.erase(sourceAsset->GetAssetPath());
+		assetManager.m_PathToAssetID.erase(sourceAsset->GetAssetPath());
 	}
 	return true;
+}
+
+Nova::AssetManager& Nova::AssetManager::Get()
+{
+	NOVA_ASSERT(m_Instance, "AssetManager hasn't been Initialized");
+	return *m_Instance;
 }

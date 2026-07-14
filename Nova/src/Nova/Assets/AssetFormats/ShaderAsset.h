@@ -24,7 +24,7 @@ namespace Nova
 		AssetRef<Graphics::PixelShader> GetShader();
 
 	private:
-		AssetRef<Graphics::PixelShader> m_Shader;
+		AssetRef<Graphics::PixelShader> m_Shader = nullptr;
 
 		friend class Assets::ShaderImporter;
 	};

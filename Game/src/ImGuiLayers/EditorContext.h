@@ -3,6 +3,6 @@
 
 struct EditorContext
 {
-	Nova::Scene* Scene;
-	Nova::Entity SelectedEntity;
+	Nova::Scene* Scene = nullptr;
+	Nova::Entity SelectedEntity = Nova::Entity::Invalid;
 };

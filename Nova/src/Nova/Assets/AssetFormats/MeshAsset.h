@@ -59,7 +59,7 @@ namespace Nova
 	private:
 		void ReloadFromSource();
 
-		AssetRef<Graphics::Mesh> m_Mesh;
+		AssetRef<Graphics::Mesh> m_Mesh = nullptr;
 
 		std::weak_ptr<ModelSourceAsset> m_MeshSource;
 		MeshOptionalSettings m_Settings;

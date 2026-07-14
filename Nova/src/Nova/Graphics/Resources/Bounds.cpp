@@ -45,7 +45,7 @@ bool XM_CALLCONV Nova::Graphics::Bounds::InsideBounds(XMVECTOR position) const
 	return DirectX::XMVector3InBounds(position, extents * 2.f);
 }
 
-bool XM_CALLCONV Nova::Graphics::Bounds::RayBounds(XMVECTOR origin, XMVECTOR direction) const
+bool XM_CALLCONV Nova::Graphics::Bounds::RayBounds(XMVECTOR origin, XMVECTOR direction, float* hitDistance) const
 {
 	XMVECTOR center = DirectX::XMLoadFloat3(&Center);
 	XMVECTOR extents = DirectX::XMLoadFloat3(&Extents);
@@ -59,6 +59,7 @@ bool XM_CALLCONV Nova::Graphics::Bounds::RayBounds(XMVECTOR origin, XMVECTOR dir
 	XMVECTOR t2 = DirectX::XMVectorMax(tMin, tMax);
 	XMVECTOR tNear = DirectX::XMVectorMax(DirectX::XMVectorMax(t1, DirectX::XMVectorSplatY(t1)), DirectX::XMVectorSplatZ(t1)); // Max of (t1.x, t1.y, t1.z)
 	XMVECTOR tFar = DirectX::XMVectorMin(DirectX::XMVectorMin(t2, DirectX::XMVectorSplatY(t2)), DirectX::XMVectorSplatZ(t2)); // Min of (t2.x, t2.y, t2.z)
+	if (hitDistance) *hitDistance = DirectX::XMVectorGetX(tNear);
 	return DirectX::XMVectorGetX(tNear) <= DirectX::XMVectorGetX(tFar);
 }
 

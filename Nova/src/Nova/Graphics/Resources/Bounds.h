@@ -17,7 +17,7 @@ namespace Nova::Graphics
 		XMFLOAT3 GetMax() const;
 
 		bool XM_CALLCONV InsideBounds(XMVECTOR position) const;
-		bool XM_CALLCONV RayBounds(XMVECTOR position, XMVECTOR direction) const;
+		bool XM_CALLCONV RayBounds(XMVECTOR position, XMVECTOR direction, float* hitDistance = nullptr) const;
 
 		void XM_CALLCONV SetMinMax(XMVECTOR min, XMVECTOR max);
 		void XM_CALLCONV ExpandTo(XMVECTOR position);

@@ -38,3 +38,8 @@ void Nova::Graphics::Texture2D::Bind(uint32_t slot) const
 {
 	DX11::GetContext()->PSSetShaderResources(slot, 1, m_TextureView.GetAddressOf());
 }
+
+ID3D11ShaderResourceView* Nova::Graphics::Texture2D::GetTexture() const
+{
+	return m_TextureView.Get();
+}

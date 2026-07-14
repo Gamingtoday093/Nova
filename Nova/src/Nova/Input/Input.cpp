@@ -140,6 +140,17 @@ POINT Nova::Input::GetMousePosition()
 	return Input::Get().m_CurrentMousePosition;
 }
 
+void Nova::Input::SetMousePosition(POINT position)
+{
+	Input& input = Input::Get();
+	input.m_PendingMousePosition = position;
+	input.m_CurrentMousePosition = position;
+	input.m_PreviousMousePosition = position;
+
+	ClientToScreen(GetForegroundWindow(), &position);
+	SetCursorPos(position.x, position.y);
+}
+
 POINT Nova::Input::GetMouseDelta()
 {
 	Input& input = Input::Get();
@@ -156,4 +167,10 @@ short Nova::Input::GetScrollDelta()
 	if (!ShouldProcessInput()) return 0;
 
 	return -Input::Get().m_CurrentScrollDelta;
+}
+
+inline Nova::Input& Nova::Input::Get()
+{
+	NOVA_ASSERT(m_Instance, "Input hasn't been Initialized");
+	return *m_Instance;
 }

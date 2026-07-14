@@ -24,7 +24,7 @@ namespace Nova
 		const Graphics::CubeTexture& GetSkyboxTexture() const;
 
 	private:
-		std::unique_ptr<Graphics::CubeTexture> m_SkyboxTexure;
+		std::unique_ptr<Graphics::CubeTexture> m_SkyboxTexure = nullptr;
 
 		friend class Assets::SkyboxImporter;
 	};

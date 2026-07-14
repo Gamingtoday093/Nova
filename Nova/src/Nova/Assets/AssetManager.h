@@ -19,6 +19,9 @@ namespace Nova
 		AssetManager();
 		~AssetManager();
 
+		static const std::filesystem::path& GetAssetsPath();
+		static const std::filesystem::path& GetAssetsFullPath();
+
 		template<typename TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false, "Unsupported SourceAsset"); }
 
@@ -50,11 +53,7 @@ namespace Nova
 		template<typename T>
 		using ToAssetID = std::unordered_map<T, AssetID>;
 
-		inline static AssetManager& Get()
-		{
-			NOVA_ASSERT(m_Instance, "AssetManager hasn't been Initialized");
-			return *m_Instance;
-		}
+		inline static AssetManager& Get();
 
 		template<SourceAssetType TAsset, class Importer>
 		static std::shared_ptr<TAsset> LoadFromPath(const std::filesystem::path& assetPath);
@@ -69,8 +68,9 @@ namespace Nova
 	template<AssetType TAsset>
 	std::shared_ptr<TAsset> Nova::AssetManager::GetAsset(const AssetID& assetID)
 	{
-		auto asset = Get().m_AssetRegistry.find(assetID);
-		if (asset == Get().m_AssetRegistry.end())
+		AssetManager& assetManager = AssetManager::Get();
+		auto asset = assetManager.m_AssetRegistry.find(assetID);
+		if (asset == assetManager.m_AssetRegistry.end())
 		{
 			NOVA_CORE_WARN("Failed to find Get {0} from ID", TAsset::GetAssetName_s());
 			return nullptr;
@@ -90,8 +90,9 @@ namespace Nova
 	{
 		std::shared_ptr<TAsset> asset = std::make_shared<TAsset>(assetID, name, std::forward<Args>(args)...);
 
-		Get().m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
-		Get().m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
+		AssetManager& assetManager = AssetManager::Get();
+		assetManager.m_AssetRegistry.insert_or_assign(asset->GetAssetID(), asset);
+		assetManager.m_NameToAssetID.insert_or_assign(asset->GetName(), asset->GetAssetID());
 		return asset;
 	}
 

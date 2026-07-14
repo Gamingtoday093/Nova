@@ -18,6 +18,8 @@ namespace Nova::Graphics
 		void Bind() const override;
 		void Bind(uint32_t slot) const;
 
+		ID3D11ShaderResourceView* GetTexture() const;
+
 	private:
 		ComPtr<ID3D11ShaderResourceView> m_TextureView;
 	};

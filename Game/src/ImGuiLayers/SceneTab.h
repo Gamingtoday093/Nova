@@ -23,5 +23,7 @@ private:
 	ImGuizmo::OPERATION m_GizmoOperation;
 	ImGuizmo::MODE m_GizmoSpace;
 
+	bool m_CaptureMouse = false;
+
 	EditorContext& m_Context;
 };

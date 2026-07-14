@@ -28,16 +28,13 @@ namespace Nova
 		static bool KeyHeld(EMouseButton mouseButton);
 
 		static POINT GetMousePosition();
+		static void SetMousePosition(POINT position);
 		static POINT GetMouseDelta();
 
 		static short GetScrollDelta();
 
 	private:
-		inline static Input& Get()
-		{
-			NOVA_ASSERT(m_Instance, "Input hasn't been Initialized");
-			return *m_Instance;
-		}
+		inline static Input& Get();
 
 		static constexpr size_t LEFT_MOUSE_BUTTON = size_t(EMouseButton::LEFT);
 		static constexpr size_t RIGHT_MOUSE_BUTTON = size_t(EMouseButton::RIGHT);

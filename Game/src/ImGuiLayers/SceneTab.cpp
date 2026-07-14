@@ -84,6 +84,7 @@ void SceneTab::Render()
 			}
 		}
 
+	m_CaptureMouse &= ImGui::IsMouseDown(ImGuiMouseButton_Right) && !ImGuizmo::IsUsing();
 	if (ImGui::IsItemHovered() && !ImGuizmo::IsUsing())
 	{
 		if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
@@ -117,6 +118,7 @@ void SceneTab::Render()
 				XMVECTOR origin = m_Context.Scene->GetCamera().ScreenToWorld(insideViewportPos);
 				XMVECTOR direction = DirectX::XMVector3Normalize(origin - DirectX::XMLoadFloat3(&m_Context.Scene->m_FreeLookCamera.m_Position));
 
+				float closestDistance = FLT_MAX;
 				m_Context.SelectedEntity = Nova::Entity::Invalid;
 				for (Nova::Entity& entity : m_Context.Scene->GetAllEntities())
 				{
@@ -125,10 +127,11 @@ void SceneTab::Render()
 					auto* meshRendererComponent = entity.TryGetComponent<Nova::MeshRendererComponent>();
 					if (!meshRendererComponent) continue;
 
-					if (meshRendererComponent->GetBounds(transformComponent->Transform).RayBounds(origin, direction))
+					float hitDistance;
+					if (meshRendererComponent->GetBounds(transformComponent->Transform).RayBounds(origin, direction, &hitDistance) && hitDistance <= closestDistance)
 					{
+						closestDistance = hitDistance;
 						m_Context.SelectedEntity = entity;
-						break;
 					}
 				}
 			}
@@ -136,8 +139,54 @@ void SceneTab::Render()
 				// This *works* but not for Multi-Viewports but thats more of an issue with Nova::Input
 				Nova::Input::OverrideProcessInputThisFrame();
 		}
-		else
+		else // IsMouseDown(ImGuiMouseButton_Right)
+		{
+			m_CaptureMouse = true;
 			Nova::Input::OverrideProcessInputThisFrame();
+		}
+	}
+
+	if (m_CaptureMouse && !ImGui::IsItemHovered())
+	{
+		auto& io = ImGui::GetIO();
+		ImVec2 windowPos = ImGui::GetWindowPos();
+		windowPos = { windowPos.x, windowPos.y + ImGui::GetFrameHeight() };
+		ImVec2 windowSize = ImGui::GetWindowSize();
+		windowSize = { windowSize.x, windowSize.y - ImGui::GetFrameHeight() };
+		
+		bool wantSetMousePos = false;
+		POINT newMousePos = { int32_t(io.MousePos.x), int32_t(io.MousePos.y) };
+		if (io.MousePos.x < windowPos.x)
+		{
+			wantSetMousePos = true;
+			newMousePos = { int32_t(windowPos.x + windowSize.x), newMousePos.y };
+		}
+		
+		if (io.MousePos.y < windowPos.y)
+		{
+			wantSetMousePos = true;
+			newMousePos = { newMousePos.x, int32_t(windowPos.y + windowSize.y) };
+		}
+		
+		if (io.MousePos.x > windowPos.x + windowSize.x)
+		{
+			wantSetMousePos = true;
+			newMousePos = { int32_t(windowPos.x), newMousePos.y };
+		}
+		
+		if (io.MousePos.y > windowPos.y + windowSize.y)
+		{
+			wantSetMousePos = true;
+			newMousePos = { newMousePos.x, int32_t(windowPos.y) };
+		}
+
+		if (wantSetMousePos)
+		{
+			// Use Nova::Input::SetMousePosition instead of ImGuiIO.WantSetMousePos as Scene Camera uses Nova::Input::GetMouseDelta() to Prevent Large jumps
+			// This is essentially the exact same, Except Nova::Input Mouse is Relative to the Window and ImGui uses Screen
+			ScreenToClient(GetForegroundWindow(), &newMousePos);
+			Nova::Input::SetMousePosition(newMousePos);
+		}
 	}
 
 	ImGui::End();

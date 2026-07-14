@@ -22,7 +22,7 @@ namespace Nova
 		AssetRef<Graphics::Material> GetMaterial() const;
 
 	private:
-		AssetRef<Graphics::Material> m_Material;
+		AssetRef<Graphics::Material> m_Material = nullptr;
 
 		friend class AssetManager;
 	};

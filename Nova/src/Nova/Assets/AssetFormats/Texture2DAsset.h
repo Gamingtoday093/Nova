@@ -36,7 +36,7 @@ namespace Nova
 	private:
 		Texture2DImportSettings m_Settings;
 
-		AssetRef<Graphics::Texture2D> m_Texture;
+		AssetRef<Graphics::Texture2D> m_Texture = nullptr;
 
 		friend class Assets::TextureImporter;
 	};

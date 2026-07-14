@@ -21,7 +21,7 @@ Nova::MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Graphics::Mes
 
 Nova::Graphics::Bounds Nova::MeshRendererComponent::GetBounds(const Graphics::Transform& transform) const
 {
-	if (!Mesh) return Graphics::Bounds();
+	if (!Mesh) return Graphics::Bounds(transform.Position, { 0, 0, 0 });
 
 	Graphics::Bounds bounds = Mesh->GetBounds();
 	XMVECTOR center = DirectX::XMLoadFloat3(&bounds.Center);
