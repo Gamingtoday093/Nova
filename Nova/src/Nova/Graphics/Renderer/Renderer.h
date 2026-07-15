@@ -1,5 +1,4 @@
 #pragma once
-#include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Bindables/Render/DepthStencilState.h"
 #include "Nova/Graphics/Bindables/Render/Rasterizer.h"
 #include "Nova/Graphics/Bindables/Render/BlendState.h"
@@ -13,12 +12,17 @@
 #include "Nova/Graphics/Bindables/Shader/Sampler.h"
 #include "Nova/Graphics/Bindables/Shader/PixelShader.h"
 #include "Nova/Graphics/Bindables/Mesh/InputLayout.h"
-#include "Nova/Scene/Camera/Camera.h"
 #include "Nova/Graphics/Resources/Mesh.h"
 #include "Nova/Graphics/Resources/SkyboxCube.h"
 
+namespace Nova
+{
+	class Camera;
+}
+
 namespace Nova::Graphics
 {
+	class DX11;
 	class CubeTexture;
 	class Transform;
 	class Material;
@@ -59,6 +63,6 @@ namespace Nova::Graphics
 
 		DepthStencilState m_DepthStencilState;
 		Rasterizer m_Rasterizer;
-		std::array<BlendState, size_t(EBlendState::Count)> m_BlendStates;
+		std::array<BlendState, size_t(EBlendState::COUNT)> m_BlendStates;
 	};
 }

@@ -5,6 +5,7 @@
 #include <Nova/Input/Input.h>
 #include <Nova/Scene/Component/Components.h>
 #include <Nova/Tools/QuaternionExtensions.h>
+#include <Nova/Graphics/Renderer/GizmoRenderer.h>
 
 SceneTab::SceneTab(EditorContext& context) : m_Context(context)
 {
@@ -40,6 +41,7 @@ void SceneTab::Render()
 	ImGui::Image(static_cast<ImTextureID>(m_RenderTexture.GetTexture()), textureSize);
 
 	if (m_Context.Scene && m_Context.SelectedEntity)
+	{
 		if (auto* transformComponent = m_Context.SelectedEntity.TryGetComponent<Nova::TransformComponent>())
 		{
 			ImVec2 viewportMin = ImGui::GetItemRectMin();
@@ -82,7 +84,14 @@ void SceneTab::Render()
 				transformComponent->Transform.Rotation = DirectX::XMQuaternionToEulerAngles(rotation);
 				DirectX::XMStoreFloat3(&transformComponent->Transform.Scale, scale);
 			}
+
+			if (auto* meshRendererComponent = m_Context.SelectedEntity.TryGetComponent<Nova::MeshRendererComponent>())
+			{
+				Nova::Graphics::Bounds bounds = meshRendererComponent->GetBounds(transformComponent->Transform);
+				Nova::Graphics::GizmoRenderer::RenderCube(bounds.Center, { bounds.Extents.x, bounds.Extents.y, bounds.Extents.z }, { 1, 1, 0, 1 });
+			}
 		}
+	}
 
 	m_CaptureMouse &= ImGui::IsMouseDown(ImGuiMouseButton_Right) && !ImGuizmo::IsUsing();
 	if (ImGui::IsItemHovered() && !ImGuizmo::IsUsing())

@@ -4,6 +4,7 @@
 #include "Nova/Time/Time.h"
 #include "Nova/Graphics/DX11.h"
 #include "Nova/Graphics/Renderer/Renderer.h"
+#include "Nova/Graphics/Renderer/GizmoRenderer.h"
 #include "Nova/Scene/Scene.h"
 #include "Nova/Assets/AssetManager.h"
 #include "Nova/Assets/AssetFormats/SkyboxAsset.h"
@@ -29,6 +30,7 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 	m_IsMinimized = contextParameters.Width == 0 || contextParameters.Height == 0;
 	m_Framework = std::make_unique<Graphics::DX11>(contextParameters);
 	m_Renderer = std::make_unique<Graphics::Renderer>(*m_Framework);
+	m_GizmoRenderer = std::make_unique<Graphics::GizmoRenderer>(*m_Framework);
 
 	m_Scene = std::make_unique<Scene>();
 
@@ -91,6 +93,7 @@ void Nova::WindowApplication::RenderFrame()
 	if (m_IsMinimized) return;
 
 	m_Scene->RenderEntities(*m_Renderer);
+	m_GizmoRenderer->ExecuteCommands(m_Scene->GetCamera());
 
 	auto skyboxTexture = AssetManager::GetAsset<SkyboxAsset>("Assets/Textures/Skybox");
 	m_Renderer->RenderSkybox(skyboxTexture->GetSkyboxTexture(), m_Scene->GetCamera());

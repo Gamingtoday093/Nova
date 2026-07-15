@@ -6,6 +6,7 @@ namespace Nova::Graphics
 {
 	class DX11;
 	class Renderer;
+	class GizmoRenderer;
 }
 
 namespace Nova
@@ -47,6 +48,7 @@ namespace Nova
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Graphics::DX11> m_Framework;
 		std::unique_ptr<Graphics::Renderer> m_Renderer;
+		std::unique_ptr<Graphics::GizmoRenderer> m_GizmoRenderer;
 		std::unique_ptr<AssetManager> m_AssetManager;
 		std::unique_ptr<ImGuiManager> m_ImGuiManager;
 	};

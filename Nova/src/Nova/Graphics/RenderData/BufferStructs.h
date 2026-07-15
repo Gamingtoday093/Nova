@@ -9,4 +9,10 @@ namespace Nova::Graphics
 		DirectX::XMMATRIX ProjectionViewMatrix;
 		DirectX::XMMATRIX ModelMatrix;
 	};
+
+	__declspec(align(16))
+	struct ProjectionBuffer
+	{
+		DirectX::XMMATRIX ProjectionViewMatrix;
+	};
 }

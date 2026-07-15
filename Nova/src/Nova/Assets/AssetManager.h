@@ -53,7 +53,7 @@ namespace Nova
 		template<typename T>
 		using ToAssetID = std::unordered_map<T, AssetID>;
 
-		inline static AssetManager& Get();
+		static AssetManager& Get();
 
 		template<SourceAssetType TAsset, class Importer>
 		static std::shared_ptr<TAsset> LoadFromPath(const std::filesystem::path& assetPath);

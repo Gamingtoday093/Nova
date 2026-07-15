@@ -12,6 +12,7 @@
 #include "Nova/Assets/AssetFormats/MaterialAsset.h"
 #include "Nova/Graphics/Resources/Material/MaterialFormats/StandardMaterial.h"
 #include "Nova/Assets/AssetFormats/ShaderAsset.h"
+#include "Nova/Graphics/Renderer/GizmoRenderer.h"
 
 static void ReleaseScriptCollection(entt::registry& registry, entt::entity entity)
 {

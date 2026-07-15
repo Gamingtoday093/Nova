@@ -40,5 +40,5 @@ if (!(condition)) [[unlikely]]													\
 	}																			\
 }
 #else // Release
-#define NOVA_ASSERT(condition, ...) assert((condition) && __VA_ARGS__)
+#define NOVA_ASSERT(condition, ...) assert((condition) && std::format(__VA_ARGS__))
 #endif

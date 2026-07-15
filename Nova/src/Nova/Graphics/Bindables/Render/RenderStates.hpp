@@ -10,7 +10,7 @@ namespace Nova::Graphics
 		Additive,
 		Multiply,
 		Premultiplied,
-		Count
+		COUNT
 	};
 
 	enum class EDepthMode : uint8_t
@@ -18,7 +18,7 @@ namespace Nova::Graphics
 		ReadWrite,
 		ReadOnly,
 		Disabled,
-		Count
+		COUNT
 	};
 
 	enum class ECullMode : uint8_t
@@ -26,6 +26,6 @@ namespace Nova::Graphics
 		Back,
 		Front,
 		None,
-		Count
+		COUNT
 	};
 }

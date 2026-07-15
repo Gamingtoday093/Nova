@@ -27,8 +27,21 @@ namespace Nova::Graphics
 		XMFLOAT3 Position;
 	};
 
+	struct GizmoVertex
+	{
+		GizmoVertex(XMFLOAT3 position, XMFLOAT4 color)
+		{
+			Position = position;
+			Color = color;
+		}
+
+		XMFLOAT3 Position;
+		XMFLOAT4 Color;
+	};
+
 	template<typename T>
 	concept VertexFormat =
 		std::same_as<std::remove_cvref_t<T>, Vertex> ||
+		std::same_as<std::remove_cvref_t<T>, GizmoVertex> ||
 		std::same_as<std::remove_cvref_t<T>, SkyboxVertex>;
 }
