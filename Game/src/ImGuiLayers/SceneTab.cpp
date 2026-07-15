@@ -88,7 +88,7 @@ void SceneTab::Render()
 			if (auto* meshRendererComponent = m_Context.SelectedEntity.TryGetComponent<Nova::MeshRendererComponent>())
 			{
 				Nova::Graphics::Bounds bounds = meshRendererComponent->GetBounds(transformComponent->Transform);
-				Nova::Graphics::GizmoRenderer::RenderCube(bounds.Center, { bounds.Extents.x, bounds.Extents.y, bounds.Extents.z }, { 1, 1, 0, 1 });
+				Nova::Graphics::GizmoRenderer::RenderCube(bounds.Center, bounds.Extents, { 1, 1, 0, 1 });
 			}
 		}
 	}

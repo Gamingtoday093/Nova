@@ -94,6 +94,6 @@ void Nova::FreeLookCamera::CalculateViewMatrix()
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(m_YawPitch.y, m_YawPitch.x, 0);
 	m_ViewMatrix = XMMatrixLookToLH(
 		XMLoadFloat3(&m_Position),
-		XMVector3TransformCoord(XMVectorSet(0, 0, 1, 0), rotationMatrix),
-		XMVector3TransformCoord(XMVectorSet(0, 1, 0, 0), rotationMatrix));
+		XMVector3Transform(XMVectorSet(0, 0, 1, 0), rotationMatrix),
+		XMVector3Transform(XMVectorSet(0, 1, 0, 0), rotationMatrix));
 }

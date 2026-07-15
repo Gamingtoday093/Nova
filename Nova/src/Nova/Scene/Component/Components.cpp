@@ -29,7 +29,12 @@ Nova::Graphics::Bounds Nova::MeshRendererComponent::GetBounds(const Graphics::Tr
 
 	XMMATRIX matrix = transform.CalculateMatrix();
 	center = DirectX::XMVector3Transform(center, matrix);
-	extents = DirectX::XMVector3TransformNormal(extents, matrix);
+	
+	XMMATRIX matrixAbs;
+	for (size_t i = 0; i < 4; ++i)
+		matrixAbs.r[i] = DirectX::XMVectorAbs(matrix.r[i]);
+
+	extents = DirectX::XMVector3TransformNormal(extents, matrixAbs);
 
 	DirectX::XMStoreFloat3(&bounds.Center, center);
 	DirectX::XMStoreFloat3(&bounds.Extents, extents);
