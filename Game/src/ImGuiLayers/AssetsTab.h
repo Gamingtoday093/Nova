@@ -10,10 +10,12 @@ public:
 
 private:
 	using ImGuiTreeNodeFlags = int32_t;
+	using ImGuiID = uint32_t;
 
-	bool FolderTreeNode(const std::filesystem::path& path, ImGuiTreeNodeFlags flags = 0);
+	void FileBrowserTreeNode(const std::filesystem::path& path, bool expandTree, bool defaultOpen = false);
 	void FileBrowserPanel();
-	void FileBrowserRecursive(const std::filesystem::path& path);
+	void FileBrowserRecursive(const std::filesystem::path& path, bool expandTree);
+	void FileBrowserForceCloseRecursive(const std::filesystem::path& path, ImGuiID seed);
 
 	void AssetFilesPanel();
 

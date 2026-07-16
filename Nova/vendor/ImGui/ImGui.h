@@ -5,4 +5,6 @@
 namespace ImGui {
 	bool SeparatorTextCheckbox(const char* label, const char* checkboxId, bool* v);
 	void TextColoredBg(const ImVec4& col, const ImVec4& bg, const char* text);
+	ImGuiID SetTreeNodeIsOpen(const char* label, ImGuiID seed, bool newIsOpen);
+	void TextUnformatted(const std::string& text);
 }

@@ -38,12 +38,23 @@ void AssetsTab::Render()
 	ImGui::PopStyleVar();
 }
 
-bool AssetsTab::FolderTreeNode(const std::filesystem::path& path, ImGuiTreeNodeFlags flags)
+void AssetsTab::FileBrowserTreeNode(const std::filesystem::path& path, bool expandTree, bool defaultOpen)
 {
+	bool empty = std::filesystem::is_empty(path);
+	ImGuiTreeNodeFlags flags = empty ? ImGuiTreeNodeFlags_Leaf :
+		ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | (defaultOpen ? ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_None);
+
+	if (expandTree)
+		ImGui::SetNextItemOpen(true);
+
+#pragma region FolderTreeNode
 	std::string label = path.filename().string();
-	bool open = ImGui::TreeNodeEx(("##" + label).c_str(),
+	std::string labelId = "##" + label;
+	bool open = ImGui::TreeNodeEx(labelId.c_str(),
 		(path == m_OpenFolder ? ImGuiTreeNodeFlags_Selected : ImGuiTreeNodeFlags_None) |
 		ImGuiTreeNodeFlags_SpanAvailWidth | flags);
+
+	bool newExpandTree = ImGui::IsKeyDown(ImGuiKey_LeftAlt) && ImGui::IsItemToggledOpen();
 
 	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 	{
@@ -51,16 +62,25 @@ bool AssetsTab::FolderTreeNode(const std::filesystem::path& path, ImGuiTreeNodeF
 	}
 
 	ImGui::SameLine(0, 8);
-	ImTextureID image = std::filesystem::is_empty(path) ? m_FolderEmptyIcon : open ? m_FolderOpenIcon : m_FolderClosedIcon;
+	ImTextureID image = empty ? m_FolderEmptyIcon : open ? m_FolderOpenIcon : m_FolderClosedIcon;
 	if (image)
 	{
 		ImGui::Image(image, { 13.f, 13.f });
 		ImGui::SameLine();
 	}
 
-	ImGui::Text(label.c_str());
+	ImGui::TextUnformatted(label);
+#pragma endregion // FolderTreeNode
 
-	return open;
+	if (open)
+	{
+		if (!empty) FileBrowserRecursive(path, expandTree || newExpandTree);
+		ImGui::TreePop();
+	}
+	else if (newExpandTree)
+	{
+		FileBrowserForceCloseRecursive(path, ImGui::GetID(labelId.c_str()));
+	}
 }
 
 void AssetsTab::FileBrowserPanel()
@@ -70,11 +90,7 @@ void AssetsTab::FileBrowserPanel()
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 5.f, 4.f });
 	ImGui::BeginChild("FileBrowser", { 0.f, 0.f }, ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_ResizeX);
 	
-	if (FolderTreeNode(Nova::AssetManager::GetAssetsFullPath(), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		FileBrowserRecursive(Nova::AssetManager::GetAssetsFullPath());
-		ImGui::TreePop();
-	}
+	FileBrowserTreeNode(Nova::AssetManager::GetAssetsFullPath(), false, true);
 
 	ImGui::EndChild();
 	ImGui::PopStyleVar(2);
@@ -94,7 +110,7 @@ void AssetsTab::FileBrowserPanel()
 		ImGui::GetColorU32(ImGuiCol_Separator));
 }
 
-void AssetsTab::FileBrowserRecursive(const std::filesystem::path& path)
+void AssetsTab::FileBrowserRecursive(const std::filesystem::path& path, bool expandTree)
 {
 	for (auto& entry : std::filesystem::directory_iterator(path))
 	{
@@ -104,12 +120,19 @@ void AssetsTab::FileBrowserRecursive(const std::filesystem::path& path)
 			continue;
 		}
 		
-		bool empty = std::filesystem::is_empty(entry.path());
-		if (FolderTreeNode(entry.path(), empty ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
-		{
-			if (!empty) FileBrowserRecursive(entry.path());
-			ImGui::TreePop();
-		}
+		FileBrowserTreeNode(entry.path(), expandTree);
+	}
+}
+
+void AssetsTab::FileBrowserForceCloseRecursive(const std::filesystem::path& path, ImGuiID seed)
+{
+	for (auto& entry : std::filesystem::directory_iterator(path))
+	{
+		if (!entry.is_directory()) continue;
+
+		std::string label = entry.path().filename().string();
+		ImGuiID entrySeed = ImGui::SetTreeNodeIsOpen(("##" + label).c_str(), seed, false);
+		FileBrowserForceCloseRecursive(entry.path(), entrySeed);
 	}
 }
 

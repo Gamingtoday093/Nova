@@ -1,5 +1,6 @@
 #include "novapch.h"
 #include "ImGui.h"
+#include <imgui_internal.h>
 
 bool ImGui::SeparatorTextCheckbox(const char* label, const char* checkboxId, bool* v)
 {
@@ -27,4 +28,16 @@ void ImGui::TextColoredBg(const ImVec4& col, const ImVec4& bg, const char* text)
 	ImGui::SetCursorScreenPos(pos);
 
 	ImGui::TextColored(col, text);
+}
+
+ImGuiID ImGui::SetTreeNodeIsOpen(const char* label, ImGuiID seed, bool newIsOpen)
+{
+	ImGuiID id = ImGui::GetIDWithSeed(label, nullptr, seed);
+	ImGui::TreeNodeSetOpen(id, newIsOpen);
+	return id;
+}
+
+void ImGui::TextUnformatted(const std::string& text)
+{
+	ImGui::TextUnformatted(text.c_str(), text.c_str() + text.size());
 }
