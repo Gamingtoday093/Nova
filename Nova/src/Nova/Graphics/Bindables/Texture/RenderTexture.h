@@ -12,8 +12,8 @@ namespace Nova::Graphics
 	class RenderTexture
 	{
 	public:
-		RenderTexture();
-		RenderTexture(uint32_t width, uint32_t height);
+		RenderTexture(bool sRGB = true);
+		RenderTexture(uint32_t width, uint32_t height, bool sRGB = true);
 		~RenderTexture();
 		
 		void Resize(uint32_t width, uint32_t height);
@@ -26,6 +26,7 @@ namespace Nova::Graphics
 
 	private:
 		uint32_t m_Width = 0, m_Height = 0;
+		bool m_sRGB;
 
 		void CreateRenderTargetView();
 		void CreateDepthStencilView();

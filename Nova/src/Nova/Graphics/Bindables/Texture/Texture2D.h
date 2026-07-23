@@ -13,7 +13,7 @@ namespace Nova::Graphics
 	class Texture2D : IBindable
 	{
 	public:
-		Texture2D(const DirectX::ScratchImage& image);
+		Texture2D(const DirectX::ScratchImage& image, bool sRGB = true);
 
 		void Bind() const override;
 		void Bind(uint32_t slot) const;

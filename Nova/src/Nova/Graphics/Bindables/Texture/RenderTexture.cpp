@@ -3,9 +3,9 @@
 #include "Nova/Graphics/Logging/HRAsserts.h"
 #include "Nova/Graphics/DX11.h"
 
-Nova::Graphics::RenderTexture::RenderTexture() { }
+Nova::Graphics::RenderTexture::RenderTexture(bool sRGB) : m_sRGB(sRGB) { }
 
-Nova::Graphics::RenderTexture::RenderTexture(uint32_t width, uint32_t height)
+Nova::Graphics::RenderTexture::RenderTexture(uint32_t width, uint32_t height, bool sRGB) : RenderTexture(sRGB)
 {
 	Resize(width, height);
 }
@@ -66,7 +66,7 @@ void Nova::Graphics::RenderTexture::CreateRenderTargetView()
 		.Height = m_Height,
 		.MipLevels = 1,
 		.ArraySize = 1,
-		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+		.Format = DXGI_FORMAT_R8G8B8A8_TYPELESS,
 		.SampleDesc
 		{
 			.Count = 1,
@@ -80,7 +80,7 @@ void Nova::Graphics::RenderTexture::CreateRenderTargetView()
 
 	D3D11_RENDER_TARGET_VIEW_DESC textureViewDesc
 	{
-		.Format = renderTextureDesc.Format,
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D,
 		.Texture2D
 		{
@@ -91,7 +91,7 @@ void Nova::Graphics::RenderTexture::CreateRenderTargetView()
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC textureResourceDesc
 	{
-		.Format = renderTextureDesc.Format,
+		.Format = m_sRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : DXGI_FORMAT_R8G8B8A8_UNORM,
 		.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D,
 		.Texture2D
 		{

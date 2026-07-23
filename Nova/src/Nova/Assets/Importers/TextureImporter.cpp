@@ -8,7 +8,7 @@ bool Nova::Assets::TextureImporter::Supported(const std::filesystem::path& asset
 {
 	if (!assetPath.has_extension()) return false;
 
-	static std::initializer_list<std::string> supportedFileTypes = { ".jpg", ".png" };
+	static std::initializer_list<std::string_view> supportedFileTypes = { ".jpg", ".png" };
 	std::string extension = assetPath.extension().string();
 
 	for (auto& fileType : supportedFileTypes)
@@ -17,13 +17,17 @@ bool Nova::Assets::TextureImporter::Supported(const std::filesystem::path& asset
 	return false;
 }
 
-std::shared_ptr<Nova::Texture2DAsset> Nova::Assets::TextureImporter::LoadFromPath(const std::filesystem::path& assetPath)
+std::shared_ptr<Nova::Texture2DAsset> Nova::Assets::TextureImporter::LoadFromPath(const std::filesystem::path& assetPath, const Texture2DImportSettings& settings)
 {
 	DirectX::ScratchImage image;
-	NOVA_HRASSERT(DirectX::LoadFromWICFile((assetPath).wstring().c_str(), DirectX::WIC_FLAGS_NONE, nullptr, image), "Load Skybox Image");
+	NOVA_HRASSERT(DirectX::LoadFromWICFile((assetPath).wstring().c_str(),
+		DirectX::WIC_FLAGS_FORCE_RGB, // Force format RGBA instead of for example BGRA which some image formats use
+		nullptr,
+		image), "Load Texture2D Image");
 
 	std::shared_ptr<Texture2DAsset> asset = std::make_shared<Texture2DAsset>(AssetID::NewID(), assetPath);
-	asset->m_Texture = std::make_unique<Graphics::Texture2D>(image);
+	asset->m_Settings = settings;
+	asset->m_Texture = std::make_unique<Graphics::Texture2D>(image, asset->m_Settings.ForceSRGB);
 
 	return asset;
 }

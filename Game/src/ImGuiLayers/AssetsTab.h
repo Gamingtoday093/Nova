@@ -9,7 +9,6 @@ public:
 	void Render() override;
 
 private:
-	using ImGuiTreeNodeFlags = int32_t;
 	using ImGuiID = uint32_t;
 
 	void FileBrowserTreeNode(const std::filesystem::path& path, bool expandTree, bool defaultOpen = false);

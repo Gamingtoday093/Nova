@@ -5,12 +5,17 @@ namespace Nova
 	class IImGuiLayer;
 }
 
+namespace Nova::Graphics
+{
+	class DX11;
+}
+
 namespace Nova
 {
 	class ImGuiManager
 	{
 	public:
-		ImGuiManager(HWND hwnd);
+		ImGuiManager(HWND hwnd, Graphics::DX11& framework);
 		~ImGuiManager();
 
 		void BeginFrame() const;
@@ -22,6 +27,8 @@ namespace Nova
 		static bool RemoveLayer(const IImGuiLayer* layer);
 
 	private:
+		Graphics::DX11& m_Framework;
+
 		static ImGuiManager& Get();
 
 		std::vector<std::unique_ptr<IImGuiLayer>> m_Layers;

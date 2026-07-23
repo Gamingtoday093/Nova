@@ -23,7 +23,10 @@ std::shared_ptr<Nova::SkyboxAsset> Nova::Assets::SkyboxImporter::LoadFromPath(co
     images.resize(6);
     for (size_t img = 0; img < 6; img++)
     {
-        NOVA_HRASSERT(DirectX::LoadFromWICFile((assetPath / (std::to_string(img) + ".png")).wstring().c_str(), DirectX::WIC_FLAGS_NONE, nullptr, images[img]), "Load Skybox Image");
+        NOVA_HRASSERT(DirectX::LoadFromWICFile((assetPath / (std::to_string(img) + ".png")).wstring().c_str(),
+            DirectX::WIC_FLAGS_FORCE_RGB,
+            nullptr,
+            images[img]), "Load Skybox Image");
     }
 
     std::shared_ptr<SkyboxAsset> asset = std::make_shared<SkyboxAsset>(AssetID::NewID(), assetPath);

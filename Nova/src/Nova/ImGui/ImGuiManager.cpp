@@ -7,7 +7,7 @@
 
 Nova::ImGuiManager* Nova::ImGuiManager::m_Instance;
 
-Nova::ImGuiManager::ImGuiManager(HWND hwnd)
+Nova::ImGuiManager::ImGuiManager(HWND hwnd, Graphics::DX11& framework) : m_Framework(framework)
 {
 	NOVA_ASSERT(!m_Instance, "Creating multiple ImGuiManagers is not allowed");
 	m_Instance = this;
@@ -37,6 +37,8 @@ Nova::ImGuiManager::~ImGuiManager()
 
 void Nova::ImGuiManager::BeginFrame() const
 {
+	if (m_Layers.empty()) return;
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -55,6 +57,8 @@ bool Nova::ImGuiManager::ImGuiInputWindowProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 void Nova::ImGuiManager::RenderLayers()
 {
+	if (m_Layers.empty()) return;
+
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_None); // ImGuiDockNodeFlags_PassthruCentralNode
 
 	for (auto& layer : m_Layers)
@@ -63,9 +67,12 @@ void Nova::ImGuiManager::RenderLayers()
 
 void Nova::ImGuiManager::EndFrame() const
 {
+	if (m_Layers.empty()) return;
+
 	for (auto& layer : m_Layers)
 		layer->EndFrame();
 
+	m_Framework.ForceBackBuffer(Nova::Graphics::DX11::EBackBufferColorSpace::Linear);
 	ImGui::Render();
 	
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

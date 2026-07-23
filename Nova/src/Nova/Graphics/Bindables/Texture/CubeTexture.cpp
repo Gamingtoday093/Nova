@@ -3,6 +3,7 @@
 #include <DirectXTex/DirectXTex.h>
 #include "Nova/Graphics/Logging/HRAsserts.h"
 #include "Nova/Graphics/DX11.h"
+#include "Nova/Tools/DirectXExtensions.h"
 
 static constexpr size_t TOTAL_TEXTURES = 6;
 
@@ -10,37 +11,27 @@ Nova::Graphics::CubeTexture::CubeTexture(const std::vector<DirectX::ScratchImage
 {
 	NOVA_ASSERT(images.size() == TOTAL_TEXTURES, "Cube Texture requires 6 images");
 
-	D3D11_TEXTURE2D_DESC textureDesc
-	{
-		.Width = uint32_t(images[0].GetMetadata().width),
-		.Height = uint32_t(images[0].GetMetadata().height),
-		.MipLevels = 1,
-		.ArraySize = TOTAL_TEXTURES,
-		.Format = images[0].GetMetadata().format,
-		.SampleDesc
-		{
-			.Count = 1,
-			.Quality = 0
-		},
-		.Usage = D3D11_USAGE_IMMUTABLE,
-		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
-		.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE
-	};
+	DirectX::Image imageTextures[TOTAL_TEXTURES] = {};
+	for (size_t i = 0; i < TOTAL_TEXTURES; i++)
+		imageTextures[i] = *images[i].GetImage(0, 0, 0);
 
-	D3D11_SUBRESOURCE_DATA textureData[TOTAL_TEXTURES] = {};
-	for (size_t d = 0; d < TOTAL_TEXTURES; d++)
-	{
-		textureData[d].pSysMem = images[d].GetPixels();
-		textureData[d].SysMemPitch = uint32_t(images[d].GetImage(0, 0, 0)->rowPitch);
-		textureData[d].SysMemSlicePitch = 0;
-	}
+	DirectX::TexMetadata imageMetadata = images[0].GetMetadata();
+	imageMetadata.arraySize = TOTAL_TEXTURES;
+	imageMetadata.miscFlags |= DirectX::TEX_MISC_TEXTURECUBE;
 
-	ComPtr<ID3D11Texture2D> texture;
-	NOVA_HRASSERT(DX11::GetDevice()->CreateTexture2D(&textureDesc, textureData, &texture), "Create Cube Texture");
+	ComPtr<ID3D11Resource> texture;
+	NOVA_HRASSERT(DirectX::CreateTextureEx(DX11::GetDevice(),
+		imageTextures, TOTAL_TEXTURES, imageMetadata,
+		D3D11_USAGE_IMMUTABLE,
+		D3D11_BIND_SHADER_RESOURCE,
+		0,
+		D3D11_RESOURCE_MISC_TEXTURECUBE,
+		DirectX::CREATETEX_FORCE_SRGB,
+		&texture), "Create Cube Texture");
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc
 	{
-		.Format = textureDesc.Format,
+		.Format = GetTextureFormat(texture.Get()),
 		.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE,
 		.TextureCube
 		{

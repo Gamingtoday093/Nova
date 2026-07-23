@@ -3,8 +3,9 @@
 #include "Nova/Graphics/Logging/HRAsserts.h"
 #include <DirectXTex/DirectXTex.h>
 #include "Nova/Graphics/DX11.h"
+#include "Nova/Tools/DirectXExtensions.h"
 
-Nova::Graphics::Texture2D::Texture2D(const DirectX::ScratchImage& image)
+Nova::Graphics::Texture2D::Texture2D(const DirectX::ScratchImage& image, bool sRGB)
 {
 	ComPtr<ID3D11Resource> texture;
 	NOVA_HRASSERT(DirectX::CreateTextureEx(DX11::GetDevice(),
@@ -13,12 +14,12 @@ Nova::Graphics::Texture2D::Texture2D(const DirectX::ScratchImage& image)
 		D3D11_BIND_SHADER_RESOURCE,
 		0,
 		0,
-		DirectX::CREATETEX_DEFAULT,
+		sRGB ? DirectX::CREATETEX_FORCE_SRGB : DirectX::CREATETEX_IGNORE_SRGB,
 		&texture), "Create Texture");
 	
 	D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc
 	{
-		.Format = image.GetMetadata().format,
+		.Format = GetTextureFormat(texture.Get()),
 		.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D,
 		.Texture2D
 		{

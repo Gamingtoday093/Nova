@@ -55,7 +55,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 	{
 		.Width = m_Width,
 		.Height = m_Height,
-		.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
 		.SampleDesc
 		{
 			.Count = 1,
@@ -76,7 +76,7 @@ Nova::Graphics::DX11::DX11(const GraphicsContextParameters& contextParameters)
 		nullptr,
 		&m_SwapChain), "Failed to create SwapChain");
 
-	CreateBackBufferView();
+	CreateBackBufferViews();
 	CreateDepthStencilView();
 	if (!m_RenderTexture) UpdateViewport(m_Width, m_Height);
 }
@@ -95,14 +95,15 @@ void Nova::Graphics::DX11::Resize(uint32_t width, uint32_t height)
 	m_Context->Flush();
 
 	// Release buffers
-	m_BackBufferView = nullptr;
+	m_BackBufferView_sRGB = nullptr;
+	m_BackBufferView_Linear = nullptr;
 	m_DepthStencilView = nullptr;
 
 	NOVA_HRASSERT(m_SwapChain->ResizeBuffers(0, m_Width, m_Height, DXGI_FORMAT_UNKNOWN, 0), "Resize Buffers");
 	
 	if (m_Width == 0 || m_Height == 0) return;
 
-	CreateBackBufferView();
+	CreateBackBufferViews();
 	CreateDepthStencilView();
 	if (!m_RenderTexture) UpdateViewport(m_Width, m_Height);
 }
@@ -111,15 +112,17 @@ void Nova::Graphics::DX11::SetRenderTexture(const RenderTexture* renderTexture)
 {
 	if (renderTexture && (renderTexture->GetWidth() == 0 || renderTexture->GetHeight() == 0)) return;
 
-	if (Get().m_RenderTexture && renderTexture == nullptr)
+	DX11& instance = Get();
+
+	if (instance.m_RenderTexture && renderTexture == nullptr)
 	{
-		m_Instance->m_Context->OMSetRenderTargets(1, m_Instance->m_BackBufferView.GetAddressOf(), m_Instance->m_DepthStencilView.Get());
-		m_Instance->UpdateViewport(m_Instance->m_Width, m_Instance->m_Height);
+		instance.m_Context->OMSetRenderTargets(1, instance.m_BackBufferView_sRGB.GetAddressOf(), instance.m_DepthStencilView.Get());
+		instance.UpdateViewport(instance.m_Width, instance.m_Height);
 	}
 
-	m_Instance->m_RenderTexture = renderTexture;
-	if (m_Instance->m_RenderTexture)
-		m_Instance->UpdateViewport(m_Instance->m_RenderTexture->GetWidth(), m_Instance->m_RenderTexture->GetHeight());
+	instance.m_RenderTexture = renderTexture;
+	if (instance.m_RenderTexture)
+		instance.UpdateViewport(instance.m_RenderTexture->GetWidth(), instance.m_RenderTexture->GetHeight());
 }
 
 void Nova::Graphics::DX11::BeginFrame(const float clearColor[4])
@@ -127,10 +130,25 @@ void Nova::Graphics::DX11::BeginFrame(const float clearColor[4])
 	if (m_RenderTexture)
 		m_RenderTexture->Bind(clearColor);
 	else
-		m_Context->OMSetRenderTargets(1, m_BackBufferView.GetAddressOf(), m_DepthStencilView.Get());
+		m_Context->OMSetRenderTargets(1, m_BackBufferView_sRGB.GetAddressOf(), m_DepthStencilView.Get());
 
-	m_Context->ClearRenderTargetView(m_BackBufferView.Get(), clearColor);
+	m_Context->ClearRenderTargetView(m_BackBufferView_sRGB.Get(), clearColor);
 	m_Context->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Nova::Graphics::DX11::ForceBackBuffer(EBackBufferColorSpace colorSpace)
+{
+	NOVA_ASSERT(!m_RenderTexture, "RenderTexture is Set when Forcing BackBuffer!"); // TODO: Handle this better
+
+	switch (colorSpace)
+	{
+		case EBackBufferColorSpace::sRGB:
+			m_Context->OMSetRenderTargets(1, m_BackBufferView_sRGB.GetAddressOf(), m_DepthStencilView.Get());
+			break;
+		case EBackBufferColorSpace::Linear:
+			m_Context->OMSetRenderTargets(1, m_BackBufferView_Linear.GetAddressOf(), m_DepthStencilView.Get());
+			break;
+	}
 }
 
 void Nova::Graphics::DX11::EndFrame()
@@ -160,21 +178,32 @@ uint32_t Nova::Graphics::DX11::GetHeight()
 	return Get().m_Height;
 }
 
-void Nova::Graphics::DX11::CreateBackBufferView()
+void Nova::Graphics::DX11::CreateBackBufferViews()
 {
 	ComPtr<ID3D11Texture2D> backBuffer;
 	NOVA_HRASSERT(m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)), "Get BackBuffer");
 	
-	D3D11_RENDER_TARGET_VIEW_DESC backBufferDesc
+	D3D11_RENDER_TARGET_VIEW_DESC backBufferDesc_sRGB
 	{
-		.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D,
 		.Texture2D
 		{
 			.MipSlice = 0
 		}
 	};
-	NOVA_HRASSERT(m_Device->CreateRenderTargetView(backBuffer.Get(), &backBufferDesc, &m_BackBufferView), "Create SceneView");
+	NOVA_HRASSERT(m_Device->CreateRenderTargetView(backBuffer.Get(), &backBufferDesc_sRGB, &m_BackBufferView_sRGB), "Create SceneView");
+
+	D3D11_RENDER_TARGET_VIEW_DESC backBufferDesc_Linear
+	{
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+		.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D,
+		.Texture2D
+		{
+			.MipSlice = 0
+		}
+	};
+	NOVA_HRASSERT(m_Device->CreateRenderTargetView(backBuffer.Get(), &backBufferDesc_Linear, &m_BackBufferView_Linear), "Create SceneView");
 }
 
 void Nova::Graphics::DX11::CreateDepthStencilView()

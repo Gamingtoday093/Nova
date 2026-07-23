@@ -33,6 +33,12 @@ namespace Nova::Graphics
 	class DX11
 	{
 	public:
+		enum class EBackBufferColorSpace
+		{
+			sRGB,
+			Linear
+		};
+
 		DX11(const GraphicsContextParameters& contextParameters);
 		~DX11();
 
@@ -43,6 +49,7 @@ namespace Nova::Graphics
 		static void SetRenderTexture(const RenderTexture* renderTexture);
 
 		void BeginFrame(const float clearColor[4]);
+		void ForceBackBuffer(EBackBufferColorSpace colorSpace); // Temporary? To make ImGui Render to a Linear RTV
 		void EndFrame();
 
 		float GetAspectRatio() const;
@@ -63,7 +70,7 @@ namespace Nova::Graphics
 			return *m_Instance;
 		}
 
-		void CreateBackBufferView();
+		void CreateBackBufferViews();
 		void CreateDepthStencilView();
 		void UpdateViewport(uint32_t width, uint32_t height);
 
@@ -76,7 +83,8 @@ namespace Nova::Graphics
 		ComPtr<ID3D11DeviceContext1> m_Context;
 		ComPtr<IDXGISwapChain1> m_SwapChain;
 
-		ComPtr<ID3D11RenderTargetView> m_BackBufferView;
+		ComPtr<ID3D11RenderTargetView> m_BackBufferView_sRGB;
+		ComPtr<ID3D11RenderTargetView> m_BackBufferView_Linear;
 		ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
 
 		static DX11* m_Instance;

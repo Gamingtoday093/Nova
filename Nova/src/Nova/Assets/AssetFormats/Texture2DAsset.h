@@ -15,7 +15,7 @@ namespace Nova
 {
 	struct Texture2DImportSettings
 	{
-		bool GenerateMipmaps = false;
+		bool ForceSRGB = true;
 
 		bool operator==(const Texture2DImportSettings& other) const;
 	};

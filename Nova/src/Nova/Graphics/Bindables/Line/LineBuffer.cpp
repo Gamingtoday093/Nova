@@ -17,6 +17,8 @@ void Nova::Graphics::LineBuffer::Resize(uint32_t newMaxLines)
 	m_IndexBuffer = nullptr;
 	m_MaxLines = newMaxLines;
 
+	Lines.reserve(m_MaxLines);
+
 	D3D11_BUFFER_DESC vertexBufferDesc
 	{
 		.ByteWidth = (sizeof(GizmoVertex) * 2) * m_MaxLines, // 2 Vertices per Line

@@ -34,7 +34,7 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 
 	m_Scene = std::make_unique<Scene>();
 
-	m_ImGuiManager = std::make_unique<ImGuiManager>(m_Window->GetHWND());
+	m_ImGuiManager = std::make_unique<ImGuiManager>(m_Window->GetHWND(), *m_Framework);
 }
 
 Nova::WindowApplication::~WindowApplication() = default;

@@ -10,15 +10,20 @@ AssetsTab::AssetsTab()
 {
 	m_OpenFolder = Nova::AssetManager::GetAssetsFullPath();
 
-	auto folderEmpty = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderEmpty.png");
+	Nova::Texture2DImportSettings settings
+	{
+		.ForceSRGB = false // ImGui Renders in Linear Color Space
+	};
+
+	auto folderEmpty = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderEmpty.png", settings);
 	if (folderEmpty)
 		m_FolderEmptyIcon = static_cast<ImTextureID>(folderEmpty->GetTexture()->GetTexture());
 
-	auto folderOpen = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderOpen.png");
+	auto folderOpen = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderOpen.png", settings);
 	if (folderOpen)
 		m_FolderOpenIcon = static_cast<ImTextureID>(folderOpen->GetTexture()->GetTexture());
 
-	auto folderClosed = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderClosed.png");
+	auto folderClosed = Nova::AssetManager::GetAsset<Nova::Texture2DAsset>("Assets/Icons/FolderClosed.png", settings);
 	if (folderClosed)
 		m_FolderClosedIcon = static_cast<ImTextureID>(folderClosed->GetTexture()->GetTexture());
 }
@@ -36,6 +41,47 @@ void AssetsTab::Render()
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+}
+
+void AssetsTab::FileBrowserPanel()
+{
+	ImGui::SetNextWindowSizeConstraints({ 0, -1 }, { ImGui::GetWindowWidth() - ImGui::GetStyle().WindowMinSize.x, -1 });
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4.f, 4.f });
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 5.f, 4.f });
+	ImGui::BeginChild("FileBrowser", { 0.f, 0.f }, ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_ResizeX);
+
+	FileBrowserTreeNode(Nova::AssetManager::GetAssetsFullPath(), false, true);
+
+	ImGui::EndChild();
+	ImGui::PopStyleVar(2);
+
+	ImGui::SameLine(0, 0);
+
+	// For some reason ImGuiChildFlags_ResizeX doesn't render the Handle/Border when not Hovered or Active so Manually drawing it
+	ImVec2 pos = ImGui::GetCursorPos();
+	ImVec2 min = ImGui::GetWindowPos();
+	ImVec2 size = ImGui::GetWindowSize();
+	ImVec2 max = { min.x + size.x, min.y + size.y };
+
+	// ForegroundDrawlist because Scrollbar loves to Render on-top
+	ImGui::GetForegroundDrawList()->AddRectFilled(
+		ImVec2(min.x + pos.x - 1.f, min.y + ImGui::GetFrameHeight()),
+		ImVec2(min.x + pos.x + 0.5f, max.y),
+		ImGui::GetColorU32(ImGuiCol_Separator));
+}
+
+void AssetsTab::FileBrowserRecursive(const std::filesystem::path& path, bool expandTree)
+{
+	for (auto& entry : std::filesystem::directory_iterator(path))
+	{
+		if (!entry.is_directory())
+		{
+			ImGui::Text(entry.path().filename().string().c_str());
+			continue;
+		}
+
+		FileBrowserTreeNode(entry.path(), expandTree);
+	}
 }
 
 void AssetsTab::FileBrowserTreeNode(const std::filesystem::path& path, bool expandTree, bool defaultOpen)
@@ -80,47 +126,6 @@ void AssetsTab::FileBrowserTreeNode(const std::filesystem::path& path, bool expa
 	else if (newExpandTree)
 	{
 		FileBrowserForceCloseRecursive(path, ImGui::GetID(labelId.c_str()));
-	}
-}
-
-void AssetsTab::FileBrowserPanel()
-{
-	ImGui::SetNextWindowSizeConstraints({ 0, -1 }, { ImGui::GetWindowWidth() - ImGui::GetStyle().WindowMinSize.x, -1});
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4.f, 4.f });
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 5.f, 4.f });
-	ImGui::BeginChild("FileBrowser", { 0.f, 0.f }, ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_ResizeX);
-	
-	FileBrowserTreeNode(Nova::AssetManager::GetAssetsFullPath(), false, true);
-
-	ImGui::EndChild();
-	ImGui::PopStyleVar(2);
-
-	ImGui::SameLine(0, 0);
-	
-	// For some reason ImGuiChildFlags_ResizeX doesn't render the Handle/Border when not Hovered or Active so Manually drawing it
-	ImVec2 pos = ImGui::GetCursorPos();
-	ImVec2 min = ImGui::GetWindowPos();
-	ImVec2 size = ImGui::GetWindowSize();
-	ImVec2 max = { min.x + size.x, min.y + size.y };
-
-	// ForegroundDrawlist because Scrollbar loves to Render on-top
-	ImGui::GetForegroundDrawList()->AddRectFilled(
-		ImVec2(min.x + pos.x - 1.f, min.y + ImGui::GetFrameHeight()),
-		ImVec2(min.x + pos.x + 0.5f, max.y),
-		ImGui::GetColorU32(ImGuiCol_Separator));
-}
-
-void AssetsTab::FileBrowserRecursive(const std::filesystem::path& path, bool expandTree)
-{
-	for (auto& entry : std::filesystem::directory_iterator(path))
-	{
-		if (!entry.is_directory())
-		{
-			ImGui::Text(entry.path().filename().string().c_str());
-			continue;
-		}
-		
-		FileBrowserTreeNode(entry.path(), expandTree);
 	}
 }
 

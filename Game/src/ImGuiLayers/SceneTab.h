@@ -18,7 +18,7 @@ public:
 
 private:
 	uint32_t m_Width = 0, m_Height = 0;
-	Nova::Graphics::RenderTexture m_RenderTexture;
+	Nova::Graphics::RenderTexture m_RenderTexture{ false };
 
 	ImGuizmo::OPERATION m_GizmoOperation;
 	ImGuizmo::MODE m_GizmoSpace;

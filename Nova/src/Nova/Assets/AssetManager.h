@@ -7,6 +7,7 @@ namespace Nova
 {
 	class ModelSourceAsset;
 	class Texture2DAsset;
+	struct Texture2DImportSettings;
 	class SkyboxAsset;
 	class ShaderAsset;
 }
@@ -25,6 +26,9 @@ namespace Nova
 		template<typename TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath) { static_assert(false, "Unsupported SourceAsset"); }
 
+		template<typename TAsset, typename TSettings>
+		static std::shared_ptr<TAsset> GetAsset(const std::filesystem::path& assetPath, const TSettings& settings) { static_assert(false, "Unsupported SourceAsset"); }
+
 		template<>
 		static std::shared_ptr<ModelSourceAsset> GetAsset<ModelSourceAsset>(const std::filesystem::path& assetPath);
 
@@ -32,10 +36,14 @@ namespace Nova
 		static std::shared_ptr<Texture2DAsset> GetAsset<Texture2DAsset>(const std::filesystem::path& assetPath);
 
 		template<>
+		static std::shared_ptr<Texture2DAsset> GetAsset<Texture2DAsset, Texture2DImportSettings>(const std::filesystem::path& assetPath, const Texture2DImportSettings& settings);
+
+		template<>
 		static std::shared_ptr<SkyboxAsset> GetAsset<SkyboxAsset>(const std::filesystem::path& assetPath);
 
 		template<>
 		static std::shared_ptr<ShaderAsset> GetAsset<ShaderAsset>(const std::filesystem::path& assetPath);
+
 
 		template<AssetType TAsset>
 		static std::shared_ptr<TAsset> GetAsset(const AssetID& assetID);
@@ -57,6 +65,9 @@ namespace Nova
 
 		template<SourceAssetType TAsset, class Importer>
 		static std::shared_ptr<TAsset> LoadFromPath(const std::filesystem::path& assetPath);
+
+		template<SourceAssetType TAsset, class Importer, typename TSettings>
+		static std::shared_ptr<TAsset> LoadFromPath(const std::filesystem::path& assetPath, const TSettings& settings);
 
 		AssetRegistry m_AssetRegistry;
 		ToAssetID<std::string> m_NameToAssetID;

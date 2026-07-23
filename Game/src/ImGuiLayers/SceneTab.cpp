@@ -193,6 +193,8 @@ void SceneTab::Render()
 		{
 			// Use Nova::Input::SetMousePosition instead of ImGuiIO.WantSetMousePos as Scene Camera uses Nova::Input::GetMouseDelta() to Prevent Large jumps
 			// This is essentially the exact same, Except Nova::Input Mouse is Relative to the Window and ImGui uses Screen
+
+			// TODO: Should use the HWND of the actual Window instead of GetForegroundWindow()!!
 			ScreenToClient(GetForegroundWindow(), &newMousePos);
 			Nova::Input::SetMousePosition(newMousePos);
 		}
