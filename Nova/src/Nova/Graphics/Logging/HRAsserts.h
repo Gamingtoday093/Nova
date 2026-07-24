@@ -10,5 +10,5 @@ namespace Nova::Graphics::HRAsserts
 #ifdef DEBUG
 #define NOVA_HRASSERT(hr, ...) NOVA_ASSERT(!Nova::Graphics::HRAsserts::WriteErrors(hr), __VA_ARGS__);
 #else // Release
-#define NOVA_HRASSERT(hr, ...) NOVA_ASSERT(SUCCEEDED(hr), __VA_ARGS__)
+#define NOVA_HRASSERT(hr, ...) Nova::Graphics::HRAsserts::WriteErrors(hr)
 #endif
