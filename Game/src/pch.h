@@ -6,4 +6,5 @@
 
 // Should be Moved into Nova
 #include <wrl.h>
+#include <d3d11.h>
 #include <EnTT/entt.hpp>
