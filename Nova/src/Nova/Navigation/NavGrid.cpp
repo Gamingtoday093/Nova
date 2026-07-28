@@ -122,7 +122,7 @@ bool XM_CALLCONV Nova::NavGrid::Pathfind(XMVECTOR from, XMVECTOR to, std::vector
 	childToParent[startNode] = startNode;
 	XMVECTOR nodePosition = from;
 	openNodes.emplace(startNode,
-		0.f,
+		0.f, float(m_Nodes[startNode].Value),
 		DirectX::XMVectorGetX(DirectX::XMVector3Length(to - nodePosition)));
 
 	if (lineOfSightNode != startNode)
@@ -130,7 +130,7 @@ bool XM_CALLCONV Nova::NavGrid::Pathfind(XMVECTOR from, XMVECTOR to, std::vector
 		childToParent[lineOfSightNode] = startNode;
 		tmp = GetWorldPosition(lineOfSightNode);
 		nodePosition = DirectX::XMLoadFloat3(&tmp);
-		openNodes.emplace(lineOfSightNode,
+		openNodes.emplace(lineOfSightNode, float(m_Nodes[lineOfSightNode].Value),
 			DirectX::XMVectorGetX(DirectX::XMVector3Length(nodePosition - from)),
 			DirectX::XMVectorGetX(DirectX::XMVector3Length(to - nodePosition)));
 	}
@@ -171,8 +171,9 @@ bool XM_CALLCONV Nova::NavGrid::Pathfind(XMVECTOR from, XMVECTOR to, std::vector
 				nodePosition = DirectX::XMLoadFloat3(&tmp);
 				float GCost = DirectX::XMVectorGetX(DirectX::XMVector3Length(nodePosition - from));
 				float HCost = DirectX::XMVectorGetX(DirectX::XMVector3Length(to - nodePosition));
-				if (GCost > maxDistance && HCost > maxDistance) return false; // Probably no Possible Path
-				openNodes.emplace(neighbourIndex, GCost, HCost);
+				if (GCost > maxDistance && HCost > maxDistance)
+					return false; // Probably no Possible Path
+				openNodes.emplace(neighbourIndex, float(m_Nodes[neighbourIndex].Value), GCost, HCost);
 				childToParent.insert_or_assign(neighbourIndex, nextNode.m_NodeIndex);
 			}
 		}
@@ -181,14 +182,14 @@ bool XM_CALLCONV Nova::NavGrid::Pathfind(XMVECTOR from, XMVECTOR to, std::vector
 	return !resultPath.empty();
 }
 
-bool Nova::NavGrid::HasLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex) const
+bool Nova::NavGrid::HasLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex, bool allowCost) const
 {
-	return GetLineOfSight(startNodeIndex, endNodeIndex) == endNodeIndex;
+	return GetLineOfSight(startNodeIndex, endNodeIndex, allowCost) == endNodeIndex;
 }
 
-int32_t Nova::NavGrid::GetLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex) const
+int32_t Nova::NavGrid::GetLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex, bool allowCost) const
 {
-	if (startNodeIndex == endNodeIndex && !m_Nodes[startNodeIndex].IsOccupied()) return endNodeIndex;
+	if (startNodeIndex == endNodeIndex) return endNodeIndex;
 
 	XMINT2 startNode = GetCoord(startNodeIndex);
 	XMINT2 endNode = GetCoord(endNodeIndex);
@@ -226,7 +227,7 @@ int32_t Nova::NavGrid::GetLineOfSight(int32_t startNodeIndex, int32_t endNodeInd
 		int32_t indexWidth = startNode.x + currentX * xx + currentY * yx;
 		int32_t indexHeight = startNode.y + currentX * xy + currentY * yy;
 		size_t nodeIndex = size_t((indexWidth * int32_t(m_Height)) + indexHeight);
-		if (m_Nodes[nodeIndex].IsOccupied()) return int32_t(lastIndex);
+		if (allowCost ? m_Nodes[nodeIndex] != m_Nodes[startNodeIndex] : m_Nodes[nodeIndex].HasCost()) return int32_t(lastIndex);
 		lastIndex = nodeIndex;
 
 		if (D >= 0)
@@ -258,7 +259,7 @@ void Nova::NavGrid::GetResultPath(int32_t startNodeIndex, int32_t endNodeIndex, 
 		int32_t LOSChild = lineOfSightTarget;
 		while (childToParent.at(lineOfSightTarget) != lineOfSightTarget)
 		{
-			if (HasLineOfSight(currentNodeIndex, lineOfSightTarget))
+			if (HasLineOfSight(currentNodeIndex, lineOfSightTarget, true))
 			{
 				LOSChild = lineOfSightTarget;
 				lineOfSightTarget = childToParent.at(lineOfSightTarget);
@@ -268,14 +269,15 @@ void Nova::NavGrid::GetResultPath(int32_t startNodeIndex, int32_t endNodeIndex, 
 					break;
 				}
 			}
-			else if (HasLineOfSight(currentNodeIndex, startNodeIndex))
+			else if (HasLineOfSight(currentNodeIndex, startNodeIndex, true))
 			{
 				LOSChild = lineOfSightTarget;
 				lineOfSightTarget = childToParent.at(lineOfSightTarget);
 			}
 			else
 			{
-				currentNodeIndex = LOSChild;
+				if (LOSChild != lineOfSightTarget)
+					currentNodeIndex = LOSChild;
 				break;
 			}
 		}

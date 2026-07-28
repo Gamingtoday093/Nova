@@ -9,7 +9,7 @@ struct EditorContext;
 class SceneTab : public Nova::IImGuiLayer
 {
 public:
-	SceneTab(EditorContext& context);
+	SceneTab(HWND hwnd, EditorContext& context);
 	~SceneTab();
 
 	void BeginFrame() override;
@@ -25,5 +25,6 @@ private:
 
 	bool m_CaptureMouse = false;
 
+	HWND m_HWND;
 	EditorContext& m_Context;
 };

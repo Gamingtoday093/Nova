@@ -7,7 +7,7 @@ namespace Nova::Navigation
 {
 	struct ValuedGridNode
 	{
-		ValuedGridNode(int32_t nodeIndex, float GCost, float HCost);
+		ValuedGridNode(int32_t nodeIndex, float nodeCost, float GCost, float HCost);
 
 		static constexpr float GOAL_BIAS = 2.f;
 

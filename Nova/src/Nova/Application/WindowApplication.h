@@ -34,6 +34,7 @@ namespace Nova
 		virtual void OnShutdown() { }
 
 		std::unique_ptr<Scene> m_Scene;
+		HWND GetHWND() const;
 
 	private:
 		void OnWindowEvent(WindowEvent& windowEvent);

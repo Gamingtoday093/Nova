@@ -39,6 +39,11 @@ Nova::WindowApplication::WindowApplication(const ApplicationStartupInfo& startup
 
 Nova::WindowApplication::~WindowApplication() = default;
 
+HWND Nova::WindowApplication::GetHWND() const
+{
+	return m_Window->GetHWND();
+}
+
 void Nova::WindowApplication::OnWindowEvent(WindowEvent& windowEvent)
 {
 	switch (windowEvent.GetEventType())

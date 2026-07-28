@@ -32,8 +32,8 @@ namespace Nova
 	private:
 		void StampCircleLine(XMINT2 from, XMINT2 to, int32_t radius, GridNode value);
 
-		bool HasLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex) const;
-		int32_t GetLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex) const;
+		bool HasLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex, bool allowCost = false) const;
+		int32_t GetLineOfSight(int32_t startNodeIndex, int32_t endNodeIndex, bool allowCost = false) const;
 		void GetResultPath(int32_t startNodeIndex, int32_t endNodeIndex, const std::unordered_map<int32_t, int32_t>& childToParent, std::vector<XMFLOAT3>& resultPath) const;
 		std::vector<int32_t> GetNeighbours(int32_t nodeIndex) const;
 

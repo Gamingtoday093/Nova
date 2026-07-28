@@ -1,10 +1,10 @@
 #include "novapch.h"
 #include "ValuedGridNode.h"
 
-Nova::Navigation::ValuedGridNode::ValuedGridNode(int32_t nodeIndex, float GCost, float HCost)
+Nova::Navigation::ValuedGridNode::ValuedGridNode(int32_t nodeIndex, float nodeCost, float GCost, float HCost)
 {
 	m_NodeIndex = nodeIndex;
-	m_FCost = GCost + (GOAL_BIAS * HCost);
+	m_FCost = nodeCost + GCost + (GOAL_BIAS * HCost);
 }
 
 bool Nova::Navigation::ValuedGridNodeComparer::operator()(const ValuedGridNode& _Left, const ValuedGridNode& _Right) const

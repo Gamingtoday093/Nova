@@ -7,7 +7,7 @@
 #include <Nova/Tools/QuaternionExtensions.h>
 #include <Nova/Graphics/Renderer/GizmoRenderer.h>
 
-SceneTab::SceneTab(EditorContext& context) : m_Context(context)
+SceneTab::SceneTab(HWND hwnd, EditorContext& context) : m_HWND(hwnd), m_Context(context)
 {
 	m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	m_GizmoSpace = ImGuizmo::MODE::WORLD;
@@ -93,10 +93,10 @@ void SceneTab::Render()
 		}
 	}
 
-	m_CaptureMouse &= ImGui::IsMouseDown(ImGuiMouseButton_Right) && !ImGuizmo::IsUsing();
+	m_CaptureMouse &= (ImGui::IsMouseDown(ImGuiMouseButton_Right) || ImGui::IsMouseDown(ImGuiMouseButton_Middle)) && !ImGuizmo::IsUsing();
 	if (ImGui::IsItemHovered() && !ImGuizmo::IsUsing())
 	{
-		if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
+		if (!ImGui::IsMouseDown(ImGuiMouseButton_Right) && !ImGui::IsMouseDown(ImGuiMouseButton_Middle))
 		{
 			if (ImGui::IsKeyDown(ImGuiKey_Q))
 				m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -148,7 +148,7 @@ void SceneTab::Render()
 				// This *works* but not for Multi-Viewports but thats more of an issue with Nova::Input
 				Nova::Input::OverrideProcessInputThisFrame();
 		}
-		else // IsMouseDown(ImGuiMouseButton_Right)
+		else // IsMouseDown(ImGuiMouseButton_Right) || ImGui::IsMouseDown(ImGuiMouseButton_Middle)
 		{
 			m_CaptureMouse = true;
 			Nova::Input::OverrideProcessInputThisFrame();
@@ -193,9 +193,7 @@ void SceneTab::Render()
 		{
 			// Use Nova::Input::SetMousePosition instead of ImGuiIO.WantSetMousePos as Scene Camera uses Nova::Input::GetMouseDelta() to Prevent Large jumps
 			// This is essentially the exact same, Except Nova::Input Mouse is Relative to the Window and ImGui uses Screen
-
-			// TODO: Should use the HWND of the actual Window instead of GetForegroundWindow()!!
-			ScreenToClient(GetForegroundWindow(), &newMousePos);
+			ScreenToClient(m_HWND, &newMousePos);
 			Nova::Input::SetMousePosition(newMousePos);
 		}
 	}

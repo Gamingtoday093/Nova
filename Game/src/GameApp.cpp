@@ -22,16 +22,19 @@ public:
 	{
 		m_Context.Scene = m_Scene.get();
 
-		Nova::ImGuiManager::AddLayer(std::make_unique<SceneTab>(m_Context));
+		Nova::ImGuiManager::AddLayer(std::make_unique<SceneTab>(GetHWND(), m_Context));
 		Nova::ImGuiManager::AddLayer(std::make_unique<AssetsTab>());
 		Nova::ImGuiManager::AddLayer(std::make_unique<HierarchyTab>(m_Context));
 		Nova::ImGuiManager::AddLayer(std::make_unique<InspectorTab>(m_Context));
 		Nova::ImGuiManager::AddLayer(std::make_unique<ConsoleTab>());
 
 		m_NavGrid.Resize(256, 256);
-		m_NavGrid.NodeSize = 2.f;
-		m_NavGrid.StampSquare({ 20, 20 }, 8, 200);
+		m_NavGrid.NodeSize = 5.5f;
+		m_NavGrid.StampSquare({ 20, 20 }, 8, Nova::GridNode::OCCUPIED);
+		m_NavGrid.StampSquare({ 19, 18 }, 4, 0);
 		m_NavGrid.StampSquare({ 0, -3 }, 9, 20);
+		m_NavGrid.StampCircle({ 60, 32 }, 12, 240);
+		m_NavGrid.StampCircle({ 50, 28 }, 9, 0);
 	}
 
 	void OnUpdate() override
@@ -45,9 +48,16 @@ public:
 		for (size_t i = 0; i < nodes.size(); i++)
 		{
 			auto node = nodes[i];
-			if (!node.IsOccupied()) continue;
+			if (!node.HasCost()) continue;
 
-			Nova::Graphics::GizmoRenderer::RenderPlane(m_NavGrid.GetWorldPosition(int32_t(i)), { halfNodeSize, halfNodeSize }, { 1, 0, 0, 1 });
+			XMFLOAT4 color;
+			if (!node.IsOccupied())
+			{
+				DirectX::XMStoreFloat4(&color, DirectX::XMVectorLerp(DirectX::XMVectorSet(1, 1, 1, 0.2f), DirectX::XMVectorSet(0.8f, 0.2f, 0.2f, 0.5f), float(node.Value) / float(Nova::GridNode::OCCUPIED)));
+			}
+			else
+				color = { 1, 0, 0, 1 };
+			Nova::Graphics::GizmoRenderer::RenderPlane(m_NavGrid.GetWorldPosition(int32_t(i)), { halfNodeSize, halfNodeSize }, color);
 		}
 
 		auto entities = m_Scene->GetAllEntities();
